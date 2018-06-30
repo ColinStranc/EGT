@@ -19,10 +19,11 @@ def birth(grid):
 logging.basicConfig(filename='../logging/egt.log', level='INFO')
 logging.info('TEST')
 
-grid = g.Grid(5, 30)
+grid = g.Grid(5, 30, -3)
 
 for i in range(0,1):
     birth(grid)
     grid.assign_base_payoffs()
+    grid.apply_threat_level()
 
 print(grid.to_string())
