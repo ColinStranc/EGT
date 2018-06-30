@@ -40,7 +40,7 @@ class PublicGoodsGame:
         agent_contributed = g.Agent.get_contributed(agent)
         punisher_strat = g.Agent.get_punishment_strategy(punisher)
 
-        agent_punished_for_contributing = agent_contributed && punisher_strat in [punish_strat.ANTI_SOCIAL, punish_strat.SPITEFUL]
-        agent_punished_for_not_contributing = not agent_contributed && punisher_strat in [punish_strat.RESPONSIBLE, punish_strat.SPITEFUL]
+        agent_punished_for_contributing = agent_contributed and punisher_strat in [punish_strat.ANTI_SOCIAL, punish_strat.SPITEFUL]
+        agent_punished_for_not_contributing = not agent_contributed and punisher_strat in [punish_strat.RESPONSIBLE, punish_strat.SPITEFUL]
         
-        return agent_punished_for_contributing || agent_punished_for_not_contributing
+        return agent_punished_for_contributing or agent_punished_for_not_contributing
