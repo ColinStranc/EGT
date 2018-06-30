@@ -13,11 +13,13 @@ class public_goods_games
         else
             responsible_punishers = 0
             anti_social_punishers = 0
+            
             for neighbour in neighbours
                 if g.Agent.get_punishment_strategy(neighbour) == punish_strat.RESPONSIBLE
                     responsible_punishers++
                 else if g.Agent.get_punishment_strategy(neighbour) == punish_strat.ANTI_SOCIAL
                     anti_social_punishers++
+
             if responsible_punishers > anti_social_punishers
                 return -1
             else
