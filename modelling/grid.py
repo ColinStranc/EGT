@@ -5,9 +5,11 @@ import modelling.agent as agnt
 
 class Grid:
 
-    def __init__(self, size):
+    def __init__(self, size, base_pay):
         self._size = size
         self._grid = np.zeros((size, size), int)
+
+        self._base_pay = base_pay
 
     def get_random_empty_square(self):
         empty_square = None
@@ -21,6 +23,13 @@ class Grid:
 
     def add_agent(self, agent, square):
         self._grid[square[0], square[1]] = agent
+
+    def assign_base_payoffs(self):
+        for x in range(0, self._size):
+            for y in range(0, self._size):
+                if self._grid[x, y] == 0:
+                    continue
+                self._grid[x, y] = agnt.Agent.add_fitness(self._grid[x, y], self._base_pay)
 
     def to_string(self):
         sb = ''

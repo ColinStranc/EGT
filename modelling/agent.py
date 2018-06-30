@@ -15,21 +15,49 @@ class Agent:
         return cooperation_format + punishment_format
 
     @staticmethod
-    def unlock_cooperation_strategy(bitmap):
+    def get_cooperation_strategy(bitmap):
         return (bitmap & COOPERATION) >> COOPERATION_SHIFT
 
     @staticmethod
-    def unlock_punishment_strategy(bitmap):
+    def get_punishment_strategy(bitmap):
         return (bitmap & PUNISHMENT) >> PUNISHMENT_SHIFT
 
     @staticmethod
-    def unlock_fitness(bitmap):
+    def get_fitness(bitmap):
         return bitmap & FITNESS
 
     @staticmethod
-    def to_string(bitmap):
-        c_strat = Agent.unlock_cooperation_strategy(bitmap)
-        p_strat = Agent.unlock_punishment_strategy(bitmap)
-        fitness = Agent.unlock_fitness(bitmap)
+    def add_fitness(bitmap, amount):
+        current_fitness = bitmap & FITNESS
 
-        return "C:{0} P:{1} - Fitness: {2}".format(c_strat, p_strat, fitness)
+        # We can't go negative, so if we are subtracting more than exists, just move it to 0
+        if amount < 0 and current_fitness < abs(amount):
+            return bitmap - current_fitness
+
+        new_fitness = current_fitness + amount
+
+        if new_fitness > FITNESS:
+            raise Exception("Fitness exceeded limit")
+
+        return bitmap + amount
+
+    @staticmethod
+    def _subtract_fitness(bitmap, amount):
+        current_fitness = bitmap & FITNESS
+
+        # We can't go negative, so 5 - 10 = 0
+        if current_fitness < amount:
+            return bitmap - current_fitness
+
+        return bitmap - amount
+
+    @staticmethod
+    def to_string(bitmap):
+        if bitmap == 0:
+            return "Empty Hub"
+
+        c_strat = Agent.get_cooperation_strategy(bitmap)
+        p_strat = Agent.get_punishment_strategy(bitmap)
+        fitness = Agent.get_fitness(bitmap)
+
+        return "{0:2d} {1:2d} {2:3d}".format(c_strat, p_strat, fitness)

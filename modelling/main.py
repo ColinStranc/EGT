@@ -19,9 +19,10 @@ def birth(grid):
 logging.basicConfig(filename='../logging/egt.log', level='INFO')
 logging.info('TEST')
 
-grid = g.Grid(5)
+grid = g.Grid(5, 30)
 
 for i in range(0,1):
     birth(grid)
+    grid.assign_base_payoffs()
 
 print(grid.to_string())
