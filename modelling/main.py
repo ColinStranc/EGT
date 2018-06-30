@@ -1,11 +1,13 @@
 import modelling.grid as g
+from modelling.agent import Agent
 
-import numpy as np
 import logging
 
 
 def get_random_agent():
-    return 1
+    cooperation_strategy = 2
+    punishment_strategy = 1
+    return Agent.create_agent(cooperation_strategy, punishment_strategy)
 
 
 def birth(grid):
@@ -19,6 +21,7 @@ logging.info('TEST')
 
 grid = g.Grid(5)
 
-for i in range(0,10):
+for i in range(0,1):
     birth(grid)
+
 print(grid.to_string())

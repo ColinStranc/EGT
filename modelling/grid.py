@@ -1,11 +1,13 @@
 import numpy as np
 import random
+import modelling.agent as agnt
+
 
 class Grid:
 
     def __init__(self, size):
         self._size = size
-        self._grid = np.zeros((size, size))
+        self._grid = np.zeros((size, size), int)
 
     def get_random_empty_square(self):
         empty_square = None
@@ -25,7 +27,7 @@ class Grid:
         sb += '[\n'
         for x in range(0, self._size):
             for y in range(0, self._size):
-                sb += ' {0} '.format(self._grid[x, y])
+                sb += ' <{0}> '.format(agnt.Agent.to_string(self._grid[x, y]))
             sb += '\n'
         sb += ']'
 
