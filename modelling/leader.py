@@ -22,6 +22,7 @@ class Leader:
             self._execute_generation()
 
             print(self._grid)
+            print("finished {0}/{1}".format(i+1, self._reps))
 
     def _execute_generation(self):
         self._birth()
