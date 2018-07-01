@@ -17,6 +17,8 @@ class Leader:
     def _execute_generation(self):
         self._birth()
         self._assign_payoffs()
+        # TODO: play the games!
+        # self._reproduce()
 
     def _birth(self):
         if not self._grid.has_empty_tiles:
@@ -38,6 +40,8 @@ class Leader:
 
         for agent_coordinate in agent_coordinates:
             agent = self._grid.get_agent(agent_coordinate)
-            agent = agent.change_fitness(base_pay)
+            agent = agent.change_payoff(base_pay)
             self._grid.set_agent(agent, agent_coordinate)
 
+    def _reproduce(self):
+        shuffled_agent_coordinates = self._grid.get_shuffled_occupied_tile_coordinates()

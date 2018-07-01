@@ -28,6 +28,9 @@ class Grid:
     def get_occupied_tile_coordinates(self):
         return list(self._occupied_tile_coordinates)
 
+    def get_shuffled_occupied_tile_coordinates(self):
+        return random.shuffle(self.get_occupied_tile_coordinates())
+
     def set_agent(self, agent, square):
         self._grid[square[0], square[1]] = agent.to_bitmap()
         if not self._occupied_tile_coordinates.__contains__((square[0], square[1])):
