@@ -61,6 +61,9 @@ class Agent(namedtuple('Agent', 'coop_strategy punish_strategy payoff cooperated
 
         return Agent(self.coop_strategy, self.punish_strategy, new_payoff, self.cooperated)
 
+    def clear_payoff(self):
+        return Agent(self.coop_strategy, self.punish_strategy, 0, self.cooperated)
+
     def to_bitmap(self):
         cooperation_bits = self.coop_strategy << COOPERATION_SHIFT
         punishment_bits = self.punish_strategy << PUNISHMENT_SHIFT

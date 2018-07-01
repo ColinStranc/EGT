@@ -14,9 +14,10 @@ class Leader:
         self._death_rate = death_rate
 
     def execute_simulation(self):
-        self._execute_generation()
+        for i in range(0,5):
+            self._execute_generation()
 
-        print(self._grid)
+            print(self._grid)
 
     def _execute_generation(self):
         self._birth()
@@ -25,6 +26,7 @@ class Leader:
         self._reproduce()
         self._mutations()
         self._death()
+        self._clear_payoffs()
 
     def _birth(self):
         if not self._grid.has_empty_tiles:
@@ -100,3 +102,10 @@ class Leader:
 
             if random.random() <= self._death_rate:
                 self._grid.remove_agent(agent_coordinate)
+
+    def _clear_payoffs(self):
+        agent_coordinates = self._grid.get_occupied_tile_coordinates()
+        for agent_coordinate in agent_coordinates:
+            agent = self._grid.get_agent(agent_coordinate)
+            agent = agent.clear_payoff()
+            self._grid.set_agent(agent, agent_coordinate)
