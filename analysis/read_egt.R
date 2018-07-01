@@ -23,11 +23,8 @@ read.egt <- function(egt.dir)
   results <- data.frame(gens, xs, ys, cstrats, pstrats)
   results
   
-  a <- list(results, 0, 0.1, 0.1)
-  names(a) <- c("results", "egt.version", "mutation.rate", "death.rate")
+  a <- list(results, 5, 5, 0, 0.1, 0.1)
+  names(a) <- c("results", "size", "reps", "egt.version", "mutation.rate", "death.rate")
   
   return(a)
-  
-  # temp <- read.egt('file')
-  # reps <- temp['reps']
 }
