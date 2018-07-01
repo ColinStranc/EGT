@@ -49,6 +49,10 @@ class Grid:
         agent_bits = self._grid[coordinates[0], coordinates[1]]
         return Agent.bits_to_agent(agent_bits)
 
+    def remove_agent(self, coordinates):
+        self._grid[coordinates[0], coordinates[1]] = 0
+        self._occupied_tile_coordinates.remove((coordinates[0], coordinates[1]))
+
     def __str__(self):
         sb = ''
         sb += '[\n'

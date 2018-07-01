@@ -5,12 +5,13 @@ import random
 
 
 class Leader:
-    def __init__(self, grid_size, base_pay, threat_level, mutation_rate):
+    def __init__(self, grid_size, base_pay, threat_level, mutation_rate, death_rate):
         self._grid = Grid(grid_size)
 
         self._base_pay = base_pay
         self._threat_level = threat_level
         self._mutation_rate = mutation_rate
+        self._death_rate = death_rate
 
     def execute_simulation(self):
         self._execute_generation()
@@ -23,6 +24,7 @@ class Leader:
         # TODO: play the games!
         self._reproduce()
         self._mutations()
+        self._death()
 
     def _birth(self):
         if not self._grid.has_empty_tiles:
@@ -91,3 +93,10 @@ class Leader:
                 new_coop_strategy, new_punish_strategy = Agent.get_random_strategies()
                 agent = Agent(new_coop_strategy, new_punish_strategy, 0, 0)
                 self._grid.set_agent(agent, agent_coordinate)
+
+    def _death(self):
+        agent_coordinates = self._grid.get_occupied_tile_coordinates()
+        for agent_coordinate in agent_coordinates:
+
+            if random.random() <= self._death_rate:
+                self._grid.remove_agent(agent_coordinate)
