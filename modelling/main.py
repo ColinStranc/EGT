@@ -1,13 +1,15 @@
 import modelling.grid as g
 from modelling.agent import Agent
+import modelling.constants.cooperation_strategies as cs
+import modelling.constants.punishement_strategies as ps
 
 import logging
 
 
 def get_random_agent():
-    cooperation_strategy = 2
-    punishment_strategy = 1
-    return Agent.create_agent(cooperation_strategy, punishment_strategy)
+    cooperation_strategy = cs.COOPERATOR
+    punishment_strategy = ps.ANTI_SOCIAL
+    return Agent(cooperation_strategy, punishment_strategy, 0, 0)
 
 
 def birth(grid):
@@ -26,4 +28,4 @@ for i in range(0,1):
     grid.assign_base_payoffs()
     grid.apply_threat_level()
 
-print(grid.to_string())
+print(grid)

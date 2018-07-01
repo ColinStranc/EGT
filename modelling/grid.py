@@ -1,6 +1,6 @@
 import numpy as np
 import random
-import modelling.agent as agnt
+from modelling.agent import Agent
 
 
 class Grid:
@@ -23,7 +23,7 @@ class Grid:
         raise Exception('Could not find empty square, try threshold reached')
 
     def add_agent(self, agent, square):
-        self._grid[square[0], square[1]] = agent
+        self._grid[square[0], square[1]] = agent.to_bitmap()
 
     def assign_base_payoffs(self):
         self.assign_equal_payoffs_to_all(self._base_pay)
@@ -36,14 +36,20 @@ class Grid:
             for y in range(0, self._size):
                 if self._grid[x, y] == 0:
                     continue
-                self._grid[x, y] = agnt.Agent.add_fitness(self._grid[x, y], amount)
+                agent = Agent.bits_to_agent(self._grid[x, y])
+                agent = agent.change_fitness(amount)
+                self._grid[x, y] = agent.to_bitmap()
 
-    def to_string(self):
+    def __str__(self):
         sb = ''
         sb += '[\n'
         for x in range(0, self._size):
             for y in range(0, self._size):
-                sb += ' <{0}> '.format(agnt.Agent.to_string(self._grid[x, y]))
+                agent_bits = self._grid[x, y]
+                if agent_bits == 0:
+                    sb += ' <        EMPTY  TILE        > '
+                else:
+                    sb += ' <{0}> '.format(Agent.bits_to_agent(self._grid[x, y]))
             sb += '\n'
         sb += ']'
 
