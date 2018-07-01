@@ -35,6 +35,26 @@ class Grid:
     def get_occupied_tile_coordinates(self):
         return list(self._occupied_tile_coordinates)
 
+    def get_occupied_neighbour_tile_coordinates(self, coordinate):
+        neighbours = []
+
+        if self.is_tile_occupied((coordinate[0] - 1, coordinate[1])):
+            neighbours.append((coordinate[0] - 1, coordinate[1]))
+        if self.is_tile_occupied((coordinate[0] + 1, coordinate[1])):
+            neighbours.append((coordinate[0] + 1, coordinate[1]))
+        if self.is_tile_occupied((coordinate[0], coordinate[1] - 1)):
+            neighbours.append((coordinate[0], coordinate[1] - 1))
+        if self.is_tile_occupied((coordinate[0], coordinate[1] + 1)):
+            neighbours.append((coordinate[0], coordinate[1] + 1))
+
+        return neighbours
+
+    def is_tile_occupied(self, coordinate):
+        if 0 <= coordinate[0] < self._size and 0 <= coordinate[1] < self._size:
+            if not self._grid[coordinate[0], coordinate[1]] == 0:
+                return True
+        return False
+
     def get_shuffled_occupied_tile_coordinates(self):
         coordinates = self.get_occupied_tile_coordinates()
         random.shuffle(coordinates)
