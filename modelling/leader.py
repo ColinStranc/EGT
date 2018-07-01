@@ -22,7 +22,6 @@ class Leader:
         for i in range(0,self._reps):
             self._execute_generation()
 
-            print(self._grid)
             print("finished {0}/{1}".format(i+1, self._reps))
 
     def _execute_generation(self):
@@ -32,8 +31,11 @@ class Leader:
         self._reproduce()
         self._mutations()
         self._death()
+
+        print(self._grid)
+
         # TODO: clear cooperated as well -- AFTER BEING SAVED --
-        self._clear_payoffs()
+        self._clear_generation_agent_details()
 
     def _birth(self):
         if not self._grid.has_empty_tiles:
@@ -169,9 +171,10 @@ class Leader:
             if random.random() <= self._death_rate:
                 self._grid.remove_agent(agent_coordinate)
 
-    def _clear_payoffs(self):
+    def _clear_generation_agent_details(self):
         agent_coordinates = self._grid.get_occupied_tile_coordinates()
         for agent_coordinate in agent_coordinates:
             agent = self._grid.get_agent(agent_coordinate)
             agent = agent.clear_payoff()
+            agent = agent.set_cooperated(False)
             self._grid.set_agent(agent, agent_coordinate)
