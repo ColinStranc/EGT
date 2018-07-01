@@ -5,16 +5,17 @@ import random
 
 
 class Leader:
-    def __init__(self, grid_size, base_pay, threat_level, mutation_rate, death_rate):
+    def __init__(self, grid_size, reps, base_pay, threat_level, mutation_rate, death_rate):
         self._grid = Grid(grid_size)
 
+        self._reps = reps
         self._base_pay = base_pay
         self._threat_level = threat_level
         self._mutation_rate = mutation_rate
         self._death_rate = death_rate
 
     def execute_simulation(self):
-        for i in range(0,5):
+        for i in range(0,self._reps):
             self._execute_generation()
 
             print(self._grid)
