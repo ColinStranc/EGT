@@ -4,6 +4,7 @@ from modelling.public_goods_games import PublicGoodsGame
 
 import math
 import random
+import timeit
 
 
 class Leader:
@@ -27,11 +28,11 @@ class Leader:
     def _execute_generation(self):
         self._birth()
         self._assign_base_payoffs()
-        # TODO: play the games!
         self._play_game()
         self._reproduce()
         self._mutations()
         self._death()
+        # TODO: clear cooperated as well -- AFTER BEING SAVED --
         self._clear_payoffs()
 
     def _birth(self):
