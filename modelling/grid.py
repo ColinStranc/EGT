@@ -15,6 +15,13 @@ class Grid:
             return False
         return True
 
+    def is_tile_vacant(self, coordinate):
+        if 0 <= coordinate[0] < self._size and 0 <= coordinate[1] < self._size:
+            if self._grid[coordinate[0], coordinate[1]] == 0:
+                return True
+
+        return False
+
     def get_random_empty_square_coordinates(self):
         empty_square = None
         for i in range(0, 100):
@@ -29,7 +36,9 @@ class Grid:
         return list(self._occupied_tile_coordinates)
 
     def get_shuffled_occupied_tile_coordinates(self):
-        return random.shuffle(self.get_occupied_tile_coordinates())
+        coordinates = self.get_occupied_tile_coordinates()
+        random.shuffle(coordinates)
+        return coordinates
 
     def set_agent(self, agent, square):
         self._grid[square[0], square[1]] = agent.to_bitmap()
