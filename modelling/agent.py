@@ -1,4 +1,6 @@
 from collections import namedtuple
+import modelling.constants.cooperation_strategies as cs
+import modelling.constants.punishement_strategies as ps
 
 COOPERATION = int('111110000000000000000', 2)
 PUNISHMENT = int('000001111100000000000', 2)
@@ -13,6 +15,10 @@ MAX_FITNESS = 100
 
 
 class Agent(namedtuple('Agent', 'coop_strategy punish_strategy fitness cooperated')):
+
+    @staticmethod
+    def get_random_strategies():
+        return cs.COOPERATOR, ps.ANTI_SOCIAL
 
     @staticmethod
     def bits_to_agent(bitmap):
