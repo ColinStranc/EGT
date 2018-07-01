@@ -3,6 +3,7 @@ import modelling.constants.cooperation_strategies as cs
 import modelling.constants.punishement_strategies as ps
 
 import math
+import random
 
 COOPERATION = int('111110000000000000000', 2)
 PUNISHMENT = int('000001111100000000000', 2)
@@ -18,9 +19,13 @@ MAX_PAYOFF = PAYOFF
 
 class Agent(namedtuple('Agent', 'coop_strategy punish_strategy payoff cooperated')):
 
+    # This should not take for granted the magic numbers...
     @staticmethod
     def get_random_strategies():
-        return cs.COOPERATOR, ps.ANTI_SOCIAL
+        coop_random_number = random.randrange(0, 3)
+        punish_random_number = random.randrange(0, 4)
+
+        return coop_random_number + 1, punish_random_number + 1
 
     @staticmethod
     def get_fitness_from_payoff(payoff):

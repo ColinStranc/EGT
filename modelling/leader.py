@@ -5,11 +5,12 @@ import random
 
 
 class Leader:
-    def __init__(self, grid_size, base_pay, threat_level):
+    def __init__(self, grid_size, base_pay, threat_level, mutation_rate):
         self._grid = Grid(grid_size)
 
         self._base_pay = base_pay
         self._threat_level = threat_level
+        self._mutation_rate = mutation_rate
 
     def execute_simulation(self):
         self._execute_generation()
@@ -21,6 +22,7 @@ class Leader:
         self._assign_payoffs()
         # TODO: play the games!
         self._reproduce()
+        self._mutations()
 
     def _birth(self):
         if not self._grid.has_empty_tiles:
@@ -79,3 +81,13 @@ class Leader:
         offspring = Agent(agent.coop_strategy, agent.punish_strategy, 0, 0)
 
         self._grid.set_agent(offspring, reproduction_coordinate)
+
+    def _mutations(self):
+        agent_coordinates = self._grid.get_occupied_tile_coordinates()
+        for agent_coordinate in agent_coordinates:
+
+            if random.random() <= self._mutation_rate:
+                # TODO: random strategies might include the strategies we already had, is this okay?
+                new_coop_strategy, new_punish_strategy = Agent.get_random_strategies()
+                agent = Agent(new_coop_strategy, new_punish_strategy, 0, 0)
+                self._grid.set_agent(agent, agent_coordinate)
