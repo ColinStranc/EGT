@@ -16,7 +16,8 @@ PUNISHMENT_SHIFT = 12
 COOPERATED_SHIFT = 11
 NEW_AGENT_SHIFT = 10
 
-MAX_PAYOFF = PAYOFF
+PAYOFF_DECIMAL_COUNT = 3
+MAX_PAYOFF = PAYOFF / 2**PAYOFF_DECIMAL_COUNT
 
 
 class Agent(namedtuple('Agent', 'coop_strategy punish_strategy payoff cooperated new_agent')):
@@ -45,7 +46,7 @@ class Agent(namedtuple('Agent', 'coop_strategy punish_strategy payoff cooperated
         punishment_strategy = (bitmap & PUNISHMENT) >> PUNISHMENT_SHIFT
         cooperated = (bitmap & COOPERATED) >> COOPERATED_SHIFT
         new_agent = (bitmap & NEW_AGENT) >> NEW_AGENT_SHIFT
-        payoff = bitmap & PAYOFF
+        payoff = (bitmap & PAYOFF) / 2**PAYOFF_DECIMAL_COUNT
 
         return Agent(cooperation_strategy, punishment_strategy, payoff, cooperated, new_agent)
 
@@ -62,6 +63,8 @@ class Agent(namedtuple('Agent', 'coop_strategy punish_strategy payoff cooperated
             # log that we are capping the payoff at MAX_PAYOFFto avoid overflowing into other parts of the bitmap
             new_payoff = MAX_PAYOFF
         else:
+            # find the nearest value whos decimal is a power of two that we can do
+            difference_in_payoff = math.floor(difference_in_payoff * 2**PAYOFF_DECIMAL_COUNT) / 2**PAYOFF_DECIMAL_COUNT
             new_payoff = old_payoff + difference_in_payoff
 
         return Agent(self.coop_strategy, self.punish_strategy, new_payoff, self.cooperated, self.new_agent)
@@ -80,11 +83,12 @@ class Agent(namedtuple('Agent', 'coop_strategy punish_strategy payoff cooperated
         punishment_bits = self.punish_strategy << PUNISHMENT_SHIFT
         cooperated_bits = self.cooperated << COOPERATED_SHIFT
         new_bits = self.new_agent << NEW_AGENT_SHIFT
-        payoff_bits = self.payoff
+        # Make decimals into int by shifting up the necessary bits. It should have been made rounded by change_payoff
+        payoff_bits = int(self.payoff * 2**PAYOFF_DECIMAL_COUNT)
 
         return cooperation_bits + punishment_bits + cooperated_bits + new_bits + payoff_bits
 
     def __str__(self):
         novelty = "new" if self.new_agent else "old"
-        return "C:\"{0:2d}\" P:\"{1:2d}\" c:\"{2:d}\" F:\"{3:3d}\", {4}".format(self.coop_strategy, self.punish_strategy,
+        return "C:\"{0:2d}\" P:\"{1:2d}\" c:\"{2:d}\" F:\"{3:6.3f}\", {4}".format(self.coop_strategy, self.punish_strategy,
                                                                            self.cooperated, self.payoff, novelty)

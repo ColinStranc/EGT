@@ -80,7 +80,7 @@ class Grid:
             for y in range(0, self._size):
                 agent_bits = self._grid[x, y]
                 if agent_bits == 0:
-                    sb += ' <           EMPTY TILE           > '
+                    sb += ' <            EMPTY  TILE            > '
                 else:
                     sb += ' <{0}> '.format(Agent.bits_to_agent(self._grid[x, y]))
             sb += '\n'

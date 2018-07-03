@@ -129,6 +129,19 @@ class TestAgent(unittest.TestCase):
 
         self.assertEqual(payoff, agent_clone.payoff)
 
+    def test_payoff_with_complicated_fractions_marshals_to_something_close(self):
+        cooperation_strategy = cs.COOPERATOR
+        punishment_strategy = ps.ANTI_SOCIAL
+        payoff = 10.15
+        close_payoff = 10.125
+
+        agent = Agent.create_agent(cooperation_strategy, punishment_strategy)
+        agent = agent.change_payoff(payoff)
+        bitmap = agent.to_bitmap()
+        agent_clone = Agent.bits_to_agent(bitmap)
+
+        self.assertEqual(close_payoff, agent_clone.payoff)
+
     def test_can_set_cooperated_true(self):
         cooperation_strategy = cs.COOPERATOR
         punishment_strategy = ps.ANTI_SOCIAL
