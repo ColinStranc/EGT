@@ -1,6 +1,19 @@
-EGTData <- read.EGT(<sample data>)
+# Read data
+source(file.path("./read_egt.R"),chdir=F)
+FileThreat03Trail01 <- read.egt("text")
+DataThreat03Trail01 <- FileThreat03Trail01["results"]
+RepsThreat03Trail01 <- FileThreat03Trail01["reps"]
 
-EGTDataFinalGen <- subset(EGTData,gens == 50)
+#Subset data to the final generation of the simulation
+DataThreat03Trail01FinalGen <- subset(DataThreat03Trail01$results,gens == RepsThreat03Trail01)
 
-CStratCount <- c(nrow(subset(EGTDataFinalGen,cstrats == 1)),nrow(subset(EGTDataFinalGen,cstrats == 2)),nrow(subset(EGTDataFinalGen,cstrats == 3)))
-PStratCount <- c(nrow(subset(EGTDataFinalGen,pstrats == 1)),nrow(subset(EGTDataFinalGen,pstrats == 2)),nrow(subset(EGTDataFinalGen,pstrats == 3)),nrow(subset(EGTDataFinalGen,pstrats == 4))
+#Count the number of each contribution strategy into a vector.
+CStratCountThreat03Trail01FinalGen <- c(nrow(subset(DataThreat03Trail01FinalGen,cstrats == 1)),nrow(subset(DataThreat03Trail01FinalGen,cstrats == 2)),nrow(subset(DataThreat03Trail01FinalGen,cstrats == 3)))
+
+#Count the number of each punishment strategy into a vector.
+PStratCountThreat03Trail01FinalGen <- c(nrow(subset(DataThreat03Trail01FinalGen,pstrats == 1)),nrow(subset(DataThreat03Trail01FinalGen,pstrats == 2)),nrow(subset(DataThreat03Trail01FinalGen,pstrats == 3)),nrow(subset(DataThreat03Trail01FinalGen,pstrats == 4)))
+
+
+CStratCountThreat03Trail01FinalGen
+PStratCountThreat03Trail01FinalGen
+
