@@ -23,10 +23,15 @@ MAX_PAYOFF = PAYOFF / 2**PAYOFF_DECIMAL_COUNT
 class Agent(namedtuple('Agent', 'coop_strategy punish_strategy payoff cooperated new_agent')):
 
     @staticmethod
+    def create_random_agent():
+        strategies = Agent.get_random_strategies()
+        return Agent.create_agent(strategies[0], strategies[1])
+
+    @staticmethod
     # Only called when a new Agent is created, only way to have the "new_agent" bit set to 1
     #  during agent modifications you should call the methods designed for that modification instead
     def create_agent(coop_strategy, punish_strategy):
-        return Agent(coop_strategy, punish_strategy, payoff=0, cooperated=0, new_agent=1)
+        return Agent(coop_strategy, punish_strategy, payoff=0.0, cooperated=0, new_agent=1)
 
     # This should not take for granted the magic numbers...
     @staticmethod

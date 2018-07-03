@@ -70,7 +70,6 @@ class TestAgent(unittest.TestCase):
         agent = agent.change_payoff(payoff_change)
         new_agent = agent.change_payoff(payoff_change_2)
 
-        print(new_agent.payoff)
         self.assertEqual(payoff_change_2 + payoff_change + payoff, new_agent.payoff)
 
     def test_payoff_does_not_go_negative(self):

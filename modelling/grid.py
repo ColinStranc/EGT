@@ -2,10 +2,15 @@ import numpy as np
 import random
 from modelling.agent import Agent
 
+DEFAULT_GRID_SIZE = 50
+
 
 class Grid:
 
-    def __init__(self, size):
+    def __init__(self, size=DEFAULT_GRID_SIZE):
+        if size <= 0:
+            raise Exception("Grid size must be 1 or greater")
+
         self._size = size
         self._grid = np.zeros((size, size), int)
         self._occupied_tile_coordinates = []
@@ -67,6 +72,9 @@ class Grid:
 
     def get_agent(self, coordinates):
         agent_bits = self._grid[coordinates[0], coordinates[1]]
+        if agent_bits == 0:
+            return None
+
         return Agent.bits_to_agent(agent_bits)
 
     def remove_agent(self, coordinates):
