@@ -44,7 +44,7 @@ class Leader:
         new_tile_coordinates = self._grid.get_random_empty_square_coordinates()
         cooperation_strategy, punishment_strategy = Agent.get_random_strategies()
 
-        agent = Agent(cooperation_strategy, punishment_strategy, 0, 0)
+        agent = Agent.create_agent(cooperation_strategy, punishment_strategy)
         self._grid.set_agent(agent, new_tile_coordinates)
 
     def _assign_base_payoffs(self):
@@ -150,7 +150,7 @@ class Leader:
         reproduction_coordinate_index = random.randrange(0, len(candidate_reproduction_coordinates))
         reproduction_coordinate = candidate_reproduction_coordinates[reproduction_coordinate_index]
 
-        offspring = Agent(agent.coop_strategy, agent.punish_strategy, 0, 0)
+        offspring = Agent.create_agent(agent.coop_strategy, agent.punish_strategy)
 
         self._grid.set_agent(offspring, reproduction_coordinate)
 
@@ -161,7 +161,8 @@ class Leader:
             if random.random() <= self._mutation_rate:
                 # TODO: random strategies might include the strategies we already had, is this okay?
                 new_coop_strategy, new_punish_strategy = Agent.get_random_strategies()
-                agent = Agent(new_coop_strategy, new_punish_strategy, 0, 0)
+                agent = self._grid.get_agent(agent_coordinate)
+                agent = agent.change_strategies(new_coop_strategy, new_punish_strategy)
                 self._grid.set_agent(agent, agent_coordinate)
 
     def _death(self):
@@ -177,4 +178,5 @@ class Leader:
             agent = self._grid.get_agent(agent_coordinate)
             agent = agent.clear_payoff()
             agent = agent.set_cooperated(False)
+            agent = agent.clear_new_status()
             self._grid.set_agent(agent, agent_coordinate)

@@ -5,19 +5,27 @@ import modelling.constants.punishement_strategies as ps
 import math
 import random
 
-COOPERATION = int('111110000000000000000', 2)
-PUNISHMENT = int('000001111100000000000', 2)
-COOPERATED = int('000000000010000000000', 2)
-PAYOFF = int('000000000001111111111', 2)
+COOPERATION = int('1111100000000000000000', 2)
+PUNISHMENT = int('0000011111000000000000', 2)
+COOPERATED = int('0000000000100000000000', 2)
+PAYOFF = int('0000000000001111111111', 2)
+NEW_AGENT = int('0000000000010000000000', 2)
 
-COOPERATION_SHIFT = 16
-PUNISHMENT_SHIFT = 11
-COOPERATED_SHIFT = 10
+COOPERATION_SHIFT = 17
+PUNISHMENT_SHIFT = 12
+COOPERATED_SHIFT = 11
+NEW_AGENT_SHIFT = 10
 
 MAX_PAYOFF = PAYOFF
 
 
-class Agent(namedtuple('Agent', 'coop_strategy punish_strategy payoff cooperated')):
+class Agent(namedtuple('Agent', 'coop_strategy punish_strategy payoff cooperated new_agent')):
+
+    @staticmethod
+    # Only called when a new Agent is created, only way to have the "new_agent" bit set to 1
+    #  during agent modifications you should call the methods designed for that modification instead
+    def create_agent(coop_strategy, punish_strategy):
+        return Agent(coop_strategy, punish_strategy, payoff=0, cooperated=0, new_agent=1)
 
     # This should not take for granted the magic numbers...
     @staticmethod
@@ -29,9 +37,6 @@ class Agent(namedtuple('Agent', 'coop_strategy punish_strategy payoff cooperated
 
     @staticmethod
     def get_fitness_from_payoff(payoff):
-        # exponent = -0.1*payoff
-        # exponential = math.exp()
-
         return 1 - math.exp(-0.1 * payoff)
 
     @staticmethod
@@ -39,39 +44,47 @@ class Agent(namedtuple('Agent', 'coop_strategy punish_strategy payoff cooperated
         cooperation_strategy = (bitmap & COOPERATION) >> COOPERATION_SHIFT
         punishment_strategy = (bitmap & PUNISHMENT) >> PUNISHMENT_SHIFT
         cooperated = (bitmap & COOPERATED) >> COOPERATED_SHIFT
+        new_agent = (bitmap & NEW_AGENT) >> NEW_AGENT_SHIFT
         payoff = bitmap & PAYOFF
 
-        return Agent(cooperation_strategy, punishment_strategy, payoff, cooperated)
+        return Agent(cooperation_strategy, punishment_strategy, payoff, cooperated, new_agent)
 
     def set_cooperated(self, cooperated=True):
-        return Agent(self.coop_strategy, self.punish_strategy, self.payoff, cooperated)
+        return Agent(self.coop_strategy, self.punish_strategy, self.payoff, cooperated, self.new_agent)
 
     def change_payoff(self, difference_in_payoff):
         old_payoff = self.payoff
-        new_payoff = -1
 
         if old_payoff + difference_in_payoff < 0:
             # log that we aren't letting the payoff go lower than 0
             new_payoff = 0
         elif old_payoff + difference_in_payoff > MAX_PAYOFF:
-            # log that we are capping the payoff at 100 since it is a percentage
-            new_payoff = 100
+            # log that we are capping the payoff at MAX_PAYOFFto avoid overflowing into other parts of the bitmap
+            new_payoff = MAX_PAYOFF
         else:
             new_payoff = old_payoff + difference_in_payoff
 
-        return Agent(self.coop_strategy, self.punish_strategy, new_payoff, self.cooperated)
+        return Agent(self.coop_strategy, self.punish_strategy, new_payoff, self.cooperated, self.new_agent)
+
+    def change_strategies(self, new_coop_strategy, new_punish_strategy):
+        return Agent(new_coop_strategy, new_punish_strategy, self.payoff, self.cooperated, self.new_agent)
 
     def clear_payoff(self):
-        return Agent(self.coop_strategy, self.punish_strategy, 0, self.cooperated)
+        return Agent(self.coop_strategy, self.punish_strategy, 0, self.cooperated, self.new_agent)
+
+    def clear_new_status(self):
+        return Agent(self.coop_strategy, self.punish_strategy, self.payoff, self.cooperated, 0)
 
     def to_bitmap(self):
         cooperation_bits = self.coop_strategy << COOPERATION_SHIFT
         punishment_bits = self.punish_strategy << PUNISHMENT_SHIFT
         cooperated_bits = self.cooperated << COOPERATED_SHIFT
+        new_bits = self.new_agent << NEW_AGENT_SHIFT
         payoff_bits = self.payoff
 
-        return cooperation_bits + punishment_bits + cooperated_bits + payoff_bits
+        return cooperation_bits + punishment_bits + cooperated_bits + new_bits + payoff_bits
 
     def __str__(self):
-        return "C:\"{0:2d}\" P:\"{1:2d}\" c:\"{2:d}\" F:\"{3:3d}\"".format(self.coop_strategy, self.punish_strategy,
-                                                                           self.cooperated, self.payoff)
+        novelty = "new" if self.new_agent else "old"
+        return "C:\"{0:2d}\" P:\"{1:2d}\" c:\"{2:d}\" F:\"{3:3d}\", {4}".format(self.coop_strategy, self.punish_strategy,
+                                                                           self.cooperated, self.payoff, novelty)
