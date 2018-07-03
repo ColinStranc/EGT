@@ -116,9 +116,6 @@ class Leader:
             agent = agent.change_payoff(reward_per_agent)
             self._grid.set_agent(agent, agent_coordinate)
 
-    def _remove_payoff_for_cooperation(self):
-        pass
-
     def _reproduce(self):
         shuffled_agent_coordinates = self._grid.get_shuffled_occupied_tile_coordinates()
 
@@ -159,7 +156,6 @@ class Leader:
         for agent_coordinate in agent_coordinates:
 
             if random.random() <= self._mutation_rate:
-                # TODO: random strategies might include the strategies we already had, is this okay?
                 new_coop_strategy, new_punish_strategy = Agent.get_random_strategies()
                 agent = self._grid.get_agent(agent_coordinate)
                 agent = agent.change_strategies(new_coop_strategy, new_punish_strategy)
