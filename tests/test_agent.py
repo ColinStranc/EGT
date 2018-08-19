@@ -167,3 +167,14 @@ class TestAgent(unittest.TestCase):
         new_agent = agent.set_cooperated()
 
         self.assertEqual(1, new_agent.cooperated)
+
+    # TODO: Use a valid bit in the agents to denote whether the int in the grid is an agent or just arbitrary bits.
+    # def test_all_zeros_de_marshals_to_None(self):
+    #     agent = Agent.bits_to_agent(0)
+
+    #     self.assertIsNone(agent)
+
+    # def test_None_marshals_to_zeros(self):
+    #     bits = Agent.to_bitmap(None)
+
+    #     self.assertEqual(0, bits)
