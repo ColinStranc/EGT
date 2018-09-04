@@ -6,6 +6,10 @@ import modelling.constants.punishement_strategies as ps
 from modelling.strategies.cooperate import Cooperate
 from modelling.strategies.defect import Defect
 from modelling.strategies.opportunistic import Opportunistic
+from modelling.strategies.non_punishing import NonPunishing
+from modelling.strategies.anti_social import AntiSocial
+from modelling.strategies.spiteful import Spiteful
+from modelling.strategies.responsible import Responsible
 from modelling.public_goods_games import PublicGoodsGame
 
 
@@ -139,3 +143,68 @@ class TestPublicGoodsGame(unittest.TestCase):
         did_contribute = Opportunistic.contributes(neighbours, contribution_cost, punishment_fine)
 
         self.assertTrue(did_contribute)
+
+    # spiteful, antisocial, responsible, nonpunishing
+    def test_punishment_strategy_non_punishing_does_not_punish_contributor(self):
+        punisher = Agent.create_agent(cs.COOPERATOR, ps.NON_PUNISHER)
+        punishee = Agent.create_agent(cs.COOPERATOR, ps.RESPONSIBLE).set_cooperated(True)
+
+        did_punish = NonPunishing.punishes(punisher, punishee)
+
+        self.assertFalse(did_punish)
+
+    def test_punishment_strategy_non_punishing_does_not_punish_non_contributor(self):
+        punisher = Agent.create_agent(cs.COOPERATOR, ps.NON_PUNISHER)
+        punishee = Agent.create_agent(cs.DEFECTING, ps.RESPONSIBLE).set_cooperated(False)
+
+        did_punish = NonPunishing.punishes(punisher, punishee)
+
+        self.assertFalse(did_punish)
+
+    def test_punishment_strategy_spiteful_does_punish_contributor(self):
+        punisher = Agent.create_agent(cs.COOPERATOR, ps.ANTI_SOCIAL)
+        punishee = Agent.create_agent(cs.COOPERATOR, ps.RESPONSIBLE).set_cooperated(True)
+
+        did_punish = Spiteful.punishes(punisher, punishee)
+
+        self.assertTrue(did_punish)
+
+    def test_punishment_strategy_spiteful_does_punish_non_contributor(self):
+        punisher = Agent.create_agent(cs.COOPERATOR, ps.ANTI_SOCIAL)
+        punishee = Agent.create_agent(cs.DEFECTING, ps.RESPONSIBLE).set_cooperated(False)
+
+        did_punish = Spiteful.punishes(punisher, punishee)
+
+        self.assertTrue(did_punish)
+
+    def test_punishment_strategy_responsible_does_not_punish_contributor(self):
+        punisher = Agent.create_agent(cs.COOPERATOR, ps.RESPONSIBLE)
+        punishee = Agent.create_agent(cs.COOPERATOR, ps.RESPONSIBLE).set_cooperated(True)
+
+        did_punish = Responsible.punishes(punisher, punishee)
+
+        self.assertFalse(did_punish)
+
+    def test_punishment_strategy_responsible_does_punish_non_contributor(self):
+        punisher = Agent.create_agent(cs.COOPERATOR, ps.RESPONSIBLE)
+        punishee = Agent.create_agent(cs.DEFECTING, ps.RESPONSIBLE).set_cooperated(False)
+
+        did_punish = Responsible.punishes(punisher, punishee)
+
+        self.assertTrue(did_punish)
+
+    def test_punishment_strategy_anti_social_does_punish_contributor(self):
+        punisher = Agent.create_agent(cs.COOPERATOR, ps.ANTI_SOCIAL)
+        punishee = Agent.create_agent(cs.COOPERATOR, ps.RESPONSIBLE).set_cooperated(True)
+
+        did_punish = AntiSocial.punishes(punisher, punishee)
+
+        self.assertTrue(did_punish)
+
+    def test_punishment_strategy_anti_social_does_not_punish_non_contributor(self):
+        punisher = Agent.create_agent(cs.COOPERATOR, ps.ANTI_SOCIAL)
+        punishee = Agent.create_agent(cs.DEFECTING, ps.RESPONSIBLE).set_cooperated(False)
+
+        did_punish = AntiSocial.punishes(punisher, punishee)
+
+        self.assertFalse(did_punish)
