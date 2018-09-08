@@ -56,10 +56,7 @@ CStratFunction <- function(ThreatList,Levels){
       NRow <- nrow(Trial)
       Counts <- ddply(Trial,.(cstrats),.fun=nrow)
       Counts[2] <- Counts[2] / NRow
-      levels(Counts[,1]) <- c("1","2","3","Contribute","Dissent","Opportunistic")
-      Counts[,1][Counts[,1] == 1] <- "Contribute"
-      Counts[,1][Counts[,1] == 2] <- "Dissent"
-      Counts[,1][Counts[,1] == 3] <- "Opportunistic"
+      Counts[[1]] <- recode(Counts[[1]],'1'='Contribute','2'='Dissent','3'='Opportunistic')
       names(Counts) <- c("Contribution_Strategy","Proportion")
       return(Counts)
     }
@@ -83,11 +80,7 @@ PStratFunction <- function(ThreatList,Levels){
       NRow <- nrow(Trial)
       Counts <- ddply(Trial,.(pstrats),.fun=nrow)
       Counts[2] <- Counts[2] / NRow
-      levels(Counts[,1]) <- c("1","2","3","4","Responsibly","Anti_Socially","Spitefully","Never")
-      Counts[,1][Counts[,1] == 1] <- "Responsibly"
-      Counts[,1][Counts[,1] == 2] <- "Anti_Socially"
-      Counts[,1][Counts[,1] == 3] <- "Spitefully"
-      Counts[,1][Counts[,1] == 4] <- "Never"
+      Counts[[1]] <- recode(Counts[[1]],'1'='Responsibly','2'='Anti_Socially','3'='Spitefully','4'='Never')
       names(Counts) <- c("Punishment_Strategy","Proportion")
       return(Counts)
     }
