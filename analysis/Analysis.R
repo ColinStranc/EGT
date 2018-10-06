@@ -73,16 +73,16 @@ CStratFunction <- function(ThreatList,Levels){
       return(Counts)
     }
     AllTrialsDF <- rbindlist(lapply(TrialList,CStratProportionFunction)) # Apply CStratProportionFunction to each trail at a given threat level and then row bind into a dataframe.
-    SummaryTable <- ddply(AllTrialsDF,.(Contribution_Strategy),SummaryFunction) # Use the summary function to find the mean proportion and SD for each contribution strategy across the trials.
-    return(SummaryTable)
+    return(AllTrialsDF)
   }
-  SummaryTableList <- lapply(ThreatList,CStratThreatLevelAnalysis) # Apply the CStratThreatLevelAnalysis function to each threat level.
+  AllTrialsDFsList <- lapply(ThreatList,CStratThreatLevelAnalysis) # Apply the CStratThreatLevelAnalysis function to each threat level.
 	AddThreatLevel <- function(i){
-		SummaryTable <- data.frame(SummaryTableList[[i]],Threat_Level = ThreatLevelVector[i])
-		return(SummaryTable)
+		AllTrialsDF <- data.frame(AllTrialsDFsList[[i]],Threat_Level = ThreatLevelVector[i])
+		return(AllTrialsDF)
 	}
   SimulationDF <- rbindlist(lapply(Levels,AddThreatLevel)) # Add the threat level to each dataframe and then row bind the threat levels dataframes into one dataframe.
-  CStratPlot <- ggplot(data = SimulationDF, aes(x=Threat_Level, y=Proportion, group=Contribution_Strategy, colour=Contribution_Strategy)) + geom_line() + geom_point() + scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector), 22)) + geom_errorbar(aes(ymin=Proportion-(sd/2), ymax=Proportion+(sd/2)), width=1,position=position_dodge(0.05))
+  SummaryTable <- ddply(SimulationDF,.(Contribution_Strategy,Threat_Level),SummaryFunction) # Use the summary function to find the mean proportion and SD for each contribution strategy and threat level.
+  CStratPlot <- ggplot(data = SummaryTable, aes(x=Threat_Level, y=Proportion, group=Contribution_Strategy, colour=Contribution_Strategy)) + geom_line() + geom_point() + scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector), 22)) + geom_errorbar(aes(ymin=Proportion-(sd/2), ymax=Proportion+(sd/2)), width=1,position=position_dodge(0.05))
   return(CStratPlot)
 }
 
@@ -98,16 +98,16 @@ PStratFunction <- function(ThreatList,Levels){
       return(Counts)
     }
     AllTrialsDF <- rbindlist(lapply(TrialList,PStratProportionFunction)) # Apply PStratProportionFunction to each trail at a given threat level and then row bind into a dataframe.
-    SummaryTable <- ddply(AllTrialsDF,.(Punishment_Strategy),SummaryFunction) # Use the summary function to find the mean proportion and SD for each punishment strategy across the trials.
-    return(SummaryTable)
+    return(AllTrialsDF)
   }
-  SummaryTableList <- lapply(ThreatList,PStratThreatLevelAnalysis) # Apply the PStratThreatLevelAnalysis function to each threat level.
+  AllTrialsDFsList <- lapply(ThreatList,PStratThreatLevelAnalysis) # Apply the PStratThreatLevelAnalysis function to each threat level.
   AddThreatLevel <- function(i){
-		SummaryTable <- data.frame(SummaryTableList[[i]],Threat_Level = ThreatLevelVector[i])
-		return(SummaryTable)
+		AllTrialsDF <- data.frame(AllTrialsDFsList[[i]],Threat_Level = ThreatLevelVector[i])
+		return(AllTrialsDF)
 	}
   SimulationDF <- rbindlist(lapply(Levels,AddThreatLevel)) # Add the threat level to each dataframe and then row bind the threat levels dataframes into one dataframe.
-  PStratPlot <- ggplot(data = SimulationDF, aes(x=Threat_Level, y=Proportion, group=Punishment_Strategy, colour=Punishment_Strategy)) + geom_line() + geom_point() + scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector), 22)) + geom_errorbar(aes(ymin=Proportion-(sd/2), ymax=Proportion+(sd/2)), width=1,position=position_dodge(0.05))
+  SummaryTable <- ddply(SimulationDF,.(Punishment_Strategy,Threat_Level),SummaryFunction) # Use the summary function to find the mean proportion and SD for each punishment strategy and threat level.
+  PStratPlot <- ggplot(data = SummaryTable, aes(x=Threat_Level, y=Proportion, group=Punishment_Strategy, colour=Punishment_Strategy)) + geom_line() + geom_point() + scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector), 22)) + geom_errorbar(aes(ymin=Proportion-(sd/2), ymax=Proportion+(sd/2)), width=1,position=position_dodge(0.05))
   return(PStratPlot)
 }
 
