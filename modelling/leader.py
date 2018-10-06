@@ -18,9 +18,15 @@ class Leader:
         self._death_rate = death_rate
         self._contribution_multiplication_factor = contribution_multiplication_factor
 
+        self._record_name = "record.egt"
+
     def execute_simulation(self):
+        self._create_record()
+
         for i in range(0,self._reps):
             self._execute_generation()
+
+            self._add_generation_to_record(i)
 
             print("finished {0}/{1}".format(i+1, self._reps))
 
@@ -178,3 +184,29 @@ class Leader:
             agent = agent.set_cooperated(False)
             agent = agent.clear_new_status()
             self._grid.set_agent(agent, agent_coordinate)
+
+    def _create_record(self):
+        record = open(self._record_name, 'wb')
+
+        agent_header_length = 1
+        agent_record_length = 7
+        parameter_length = 2
+        header_length = agent_header_length + parameter_length
+
+        record.write(bytearray([header_length, agent_record_length, self._threat_level, 0]))
+
+        record.close()
+
+    def _add_generation_to_record(self, generation):
+        record = open(self._record_name, 'ab')
+
+        gen_1 = 0
+        gen_2 = generation
+
+        agent_coordinates = self._grid.get_occupied_tile_coordinates()
+        for agent_coordinate in agent_coordinates:
+            agent = self._grid.get_agent(agent_coordinate)
+
+            record.write(bytearray([gen_1, gen_2, agent_coordinate[0], agent_coordinate[1], agent.coop_strategy, agent.punish_strategy, agent.cooperated]))
+
+        record.close()
