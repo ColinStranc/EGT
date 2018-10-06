@@ -2,4 +2,4 @@ class Responsible:
 
     @staticmethod
     def punishes(punisher, punishee):
-        return False
+        return not punishee.cooperated
