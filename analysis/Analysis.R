@@ -43,6 +43,7 @@ library(plyr)
 library(dplyr)
 library(data.table)
 library(ggplot2)
+library(ez)
 
 # Created lists of datasets as well as indices that will be used
 DatasetsListThreat03 <- list(FileThreat03Trial01$results,FileThreat03Trial02$results)
@@ -58,7 +59,7 @@ SummaryFunction <- function(DF){
   return(Summary)
 }
 
-CStratFunction <- function(ThreatList,Levels){
+CStratDataPrep <- function(ThreatList,Levels){
   CStratThreatLevelAnalysis <- function(TrialList){
     # Function to determine the long-term proportion of each contribution strategy.
     CStratProportionFunction <- function(Trial){
@@ -81,12 +82,16 @@ CStratFunction <- function(ThreatList,Levels){
 		return(AllTrialsDF)
 	}
   SimulationDF <- rbindlist(lapply(Levels,AddThreatLevel)) # Add the threat level to each dataframe and then row bind the threat levels dataframes into one dataframe.
+  return(SimulationDF)
+}
+
+CStratPlot <- function(SimulationDF){
   SummaryTable <- ddply(SimulationDF,.(Contribution_Strategy,Threat_Level),SummaryFunction) # Use the summary function to find the mean proportion and SD for each contribution strategy and threat level.
   CStratPlot <- ggplot(data = SummaryTable, aes(x=Threat_Level, y=Proportion, group=Contribution_Strategy, colour=Contribution_Strategy)) + geom_line() + geom_point() + scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector), 22)) + geom_errorbar(aes(ymin=Proportion-(sd/2), ymax=Proportion+(sd/2)), width=1,position=position_dodge(0.05))
   return(CStratPlot)
 }
 
-PStratFunction <- function(ThreatList,Levels){
+PStratDataPrep <- function(ThreatList,Levels){
   PStratThreatLevelAnalysis <- function(TrialList){
     # Function to determine the long-term proportion of each punishment strategy.
     PStratProportionFunction <- function(Trial){
@@ -106,10 +111,16 @@ PStratFunction <- function(ThreatList,Levels){
 		return(AllTrialsDF)
 	}
   SimulationDF <- rbindlist(lapply(Levels,AddThreatLevel)) # Add the threat level to each dataframe and then row bind the threat levels dataframes into one dataframe.
+  return(SimulationDF)
+}
+
+PStratPlot <- function(SimulationDF){
   SummaryTable <- ddply(SimulationDF,.(Punishment_Strategy,Threat_Level),SummaryFunction) # Use the summary function to find the mean proportion and SD for each punishment strategy and threat level.
   PStratPlot <- ggplot(data = SummaryTable, aes(x=Threat_Level, y=Proportion, group=Punishment_Strategy, colour=Punishment_Strategy)) + geom_line() + geom_point() + scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector), 22)) + geom_errorbar(aes(ymin=Proportion-(sd/2), ymax=Proportion+(sd/2)), width=1,position=position_dodge(0.05))
   return(PStratPlot)
 }
 
-CStratFunction(ListOfThreats,ThreatLevelIndex)
-PStratFunction(ListOfThreats,ThreatLevelIndex)
+CStratData <- CStratDataPrep(ListOfThreats,ThreatLevelIndex)
+PStratData <- PStratDataPrep(ListOfThreats,ThreatLevelIndex)
+CStratPlot(CStratData)
+PStratPlot(PStratData)
