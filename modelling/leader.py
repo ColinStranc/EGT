@@ -67,12 +67,14 @@ class Leader:
         cooperation_count = 0
 
         for agent_coordinate in self._grid.get_occupied_tile_coordinates():
-            neighbour_coordinates = self._grid.get_occupied_neighbour_tile_coordinates(agent_coordinate)
             agent = self._grid.get_agent(agent_coordinate)
 
+            # Get occupied neighbours
             neighbour_agents = []
+            neighbour_coordinates = self._grid.get_occupied_neighbour_tile_coordinates(agent_coordinate)
             for neighbour_coordinate in neighbour_coordinates:
                 neighbour_agents.append(self._grid.get_agent(neighbour_coordinate))
+
 
             # TODO: if the return is the cost, then the naming here should reflect that.
             #       if this naming sticks, then an enumeration should be returned
@@ -89,10 +91,10 @@ class Leader:
 
     def _choose_punishments(self):
         for agent_coordinate in self._grid.get_occupied_tile_coordinates():
-            neighbour_coordinates = self._grid.get_occupied_neighbour_tile_coordinates(agent_coordinate)
             agent = self._grid.get_agent(agent_coordinate)
 
             neighbour_agents = []
+            neighbour_coordinates = self._grid.get_occupied_neighbour_tile_coordinates(agent_coordinate)
             for neighbour_coordinate in neighbour_coordinates:
                 neighbour_agents.append(self._grid.get_agent(neighbour_coordinate))
 

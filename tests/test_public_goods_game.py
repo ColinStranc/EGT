@@ -3,13 +3,13 @@ from modelling.grid import Grid
 from modelling.agent import Agent
 import modelling.constants.cooperation_strategies as cs
 import modelling.constants.punishement_strategies as ps
-from modelling.strategies.cooperate import Cooperate
-from modelling.strategies.defect import Defect
-from modelling.strategies.opportunistic import Opportunistic
-from modelling.strategies.non_punishing import NonPunishing
-from modelling.strategies.anti_social import AntiSocial
-from modelling.strategies.spiteful import Spiteful
-from modelling.strategies.responsible import Responsible
+from modelling.strategies.cooperation.cooperate import Cooperate
+from modelling.strategies.cooperation.defect import Defect
+from modelling.strategies.cooperation.opportunistic import Opportunistic
+from modelling.strategies.punishment.non_punishing import NonPunishing
+from modelling.strategies.punishment.anti_social import AntiSocial
+from modelling.strategies.punishment.spiteful import Spiteful
+from modelling.strategies.punishment.responsible import Responsible
 from modelling.public_goods_games import PublicGoodsGame
 
 
