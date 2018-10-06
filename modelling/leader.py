@@ -28,6 +28,9 @@ class Leader:
 
             self._add_generation_to_record(i)
 
+            # TODO: clear cooperated as well -- AFTER BEING SAVED --
+            self._clear_generation_agent_details()
+
             print("finished {0}/{1}".format(i+1, self._reps))
 
     def _execute_generation(self):
@@ -39,9 +42,6 @@ class Leader:
         self._death()
 
         print(self._grid)
-
-        # TODO: clear cooperated as well -- AFTER BEING SAVED --
-        self._clear_generation_agent_details()
 
     def _birth(self):
         if not self._grid.has_empty_tiles:

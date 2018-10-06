@@ -1,30 +1,34 @@
 read.egt <- function(egt.dir)
 {
-  gens    <- c(1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-               4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-               5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5)
+  record <- file("record.egt", "rb")
+  header_length <- readBin(record, integer(), size=1, endian = "little")
+  header_length
   
-  xs      <- c(5, 5, 1, 2, 4, 5, 5, 1, 2, 2, 3, 3, 4, 4, 5, 5,
-               1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5,
-               1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5)
+  agent_bit_length <- readBin(record, integer(), size=1, endian = "little")
   
-  ys      <- c(4, 5, 2, 2, 5, 4, 5, 2, 1, 2, 4, 5, 4, 5, 4, 5,
-               1, 2, 3, 1, 2, 5, 1, 2, 3, 4, 5, 3, 4, 5, 3, 4, 5,
-               2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 5, 1, 2, 3, 4, 5, 2, 3, 4, 5)
+  threat_level <- readBin(record, integer(), size=2, endian = "little")
   
-  cstrats <- as.factor(c(2, 2, 3, 3, 2, 2, 2, 3, 3, 3, 3, 3, 2, 3, 1, 2,
-               1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 1, 1, 2,
-               3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 3, 1, 1, 1, 2))
+  gens <-c()
+  xs <- c()
+  ys <- c()
+  cstrats <- c()
+  pstrats <- c()
+  contTag <- c()
   
-  pstrats <- as.factor(c(1, 1, 1, 3, 1, 1, 1, 1, 3, 3, 4, 4, 1, 1, 2, 2,
-               1, 1, 4, 3, 3, 4, 3, 3, 4, 4, 4, 1, 1, 1, 2, 2, 2,
-               1, 2, 1, 1, 3, 3, 3, 4, 4, 3, 3, 4, 3, 1, 1, 1, 1, 2, 2, 3, 2))
+  while(length(agent_record_parts <- readBin(record, integer(), size=1, n=agent_bit_length, endian = "little")) > 0) {
+    gens <- c(gens, agent_record_parts[2])
+    xs <- c(xs, agent_record_parts[3])
+    ys <- c(ys, agent_record_parts[4])
+    cstrats <- c(cstrats, agent_record_parts[5])
+    pstrats <- c(pstrats, agent_record_parts[6])
+    contTag <- c(contTag, agent_record_parts[7])
+  }
   
-  results <- data.frame(gens, xs, ys, cstrats, pstrats)
+  results <- data.frame(gens, xs, ys, cstrats, pstrats, contTag)
   results
   
-  a <- list(results, 5, 5, 0, 0.1, 0.1)
-  names(a) <- c("results", "size", "reps", "egt.version", "mutation.rate", "death.rate")
+  a <- list(results, threat_level)
+  names(a) <- c("results", "threat.level")
   
   return(a)
 }
