@@ -1,6 +1,13 @@
 from collections import namedtuple
 import modelling.constants.cooperation_strategies as cs
 import modelling.constants.punishement_strategies as ps
+from modelling.strategies.cooperation.cooperate import Cooperate
+from modelling.strategies.cooperation.defect import Defect
+from modelling.strategies.cooperation.opportunistic import Opportunistic
+from modelling.strategies.punishment.non_punishing import NonPunishing
+from modelling.strategies.punishment.anti_social import AntiSocial
+from modelling.strategies.punishment.spiteful import Spiteful
+from modelling.strategies.punishment.responsible import Responsible
 
 import math
 import random
@@ -73,6 +80,32 @@ class Agent(namedtuple('Agent', 'coop_strategy punish_strategy payoff cooperated
             new_payoff = old_payoff + difference_in_payoff
 
         return Agent(self.coop_strategy, self.punish_strategy, new_payoff, self.cooperated, self.new_agent)
+
+    def decide_contribution(self, neighbours, contribution_cost, punishment_fine):
+        contributed = False
+
+        if self.coop_strategy == cs.COOPERATOR:
+            contributed = Cooperate.contributes(neighbours, contribution_cost, punishment_fine)
+        elif self.coop_strategy == cs.DEFECTING:
+            contributed = Defect.contributes(neighbours, contribution_cost, punishment_fine)
+        elif self.coop_strategy == cs.OPPORTUNISTIC:
+            contributed = Opportunistic.contributes(neighbours, contribution_cost, punishment_fine)
+
+        return contributed
+
+    def decide_punishment(self, neighbour):
+        punishes = False
+
+        if self.punish_strategy == ps.ANTI_SOCIAL:
+            punishes = AntiSocial.punishes(self, neighbour)
+        elif self.punish_strategy == ps.RESPONSIBLE:
+            punishes = Responsible.punishes(self, neighbour)
+        elif self.punish_strategy == ps.NON_PUNISHER:
+            punishes = NonPunishing.punishes(self, neighbour)
+        elif self.punish_strategy == ps.SPITEFUL:
+            punishes = Spiteful.punishes(self, neighbour)
+
+        return punishes
 
     def change_strategies(self, new_coop_strategy, new_punish_strategy):
         return Agent(new_coop_strategy, new_punish_strategy, self.payoff, self.cooperated, self.new_agent)
