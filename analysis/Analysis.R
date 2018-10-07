@@ -5,8 +5,6 @@ DataThreat03Trial01 <- FileThreat03Trial01["results"]
 RepsThreat03Trial01 <- FileThreat03Trial01["reps"]
 
 # Created temporary dummy data to run analyses on
-contTag2501 <- c(1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0)
-FileThreat03Trial01$results$contTag <- contTag2501
 gens0302    <- c(1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5)
 xs0302      <- c(5, 5, 1, 2, 4, 5, 5, 1, 2, 2, 3, 3, 4, 4, 5, 5, 1, 1, 1, 2, 4, 5, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 5, 5, 5, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5)
 ys0302      <- c(4, 5, 2, 2, 5, 4, 5, 2, 1, 2, 4, 5, 4, 5, 4, 5, 1, 2, 3, 1, 2, 5, 1, 2, 3, 4, 5, 3, 4, 5, 3, 5, 3, 4, 5, 3, 4, 5, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 2, 3, 4, 5)
@@ -85,6 +83,30 @@ CStratDataPrep <- function(ThreatList,Levels){
   return(SimulationDF)
 }
 
+CStratAnalysis <- function(SimDF){
+  SimDF$Threat_Level <- as.factor(SimDF$Threat_Level)
+  SimDF$Wid <- c(1:nrow(SimDF))
+  ezANOVAFunction <- function(DF){
+    ANOVA <- ezANOVA(DF,dv=Proportion,wid=Wid,between=Threat_Level,return_aov=TRUE)
+    return(ANOVA)
+  }
+  ANOVAList <- dlply(SimDF,.(Contribution_Strategy),ezANOVAFunction)
+  AddMSE <- function(ANOVA){
+    ANOVA$ANOVA$MSE <- ANOVA$`Levene's Test for Homogeneity of Variance`$SSd / ANOVA$ANOVA$DFd
+    return(ANOVA)
+  }
+  ANOVAList <- lapply(ANOVAList,AddMSE)
+  ANOVATable <- rbind(ANOVAList$Contribute$ANOVA,ANOVAList$Dissent$ANOVA,ANOVAList$Opportunistic$ANOVA,ANOVAList$Percentage_Contributing$ANOVA)
+  ANOVATable$Contribution_Strategy <- c("Contribute","Dissent","Opportunistic","Percentage_Contributing")
+  TukeyFunction <- function(ANOVA){
+    Tukey <- TukeyHSD(ANOVA$aov)
+    return(Tukey)
+  }
+  TukeyList <- lapply(ANOVAList,TukeyFunction)
+  ResultsList <- list(ANOVATable,TukeyList)
+  return(ResultsList)
+}
+
 CStratPlot <- function(SimulationDF){
   SummaryTable <- ddply(SimulationDF,.(Contribution_Strategy,Threat_Level),SummaryFunction) # Use the summary function to find the mean proportion and SD for each contribution strategy and threat level.
   CStratPlot <- ggplot(data = SummaryTable, aes(x=Threat_Level, y=Proportion, group=Contribution_Strategy, colour=Contribution_Strategy)) + geom_line() + geom_point() + scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector), 22)) + geom_errorbar(aes(ymin=Proportion-(sd/2), ymax=Proportion+(sd/2)), width=1,position=position_dodge(0.05))
@@ -114,6 +136,30 @@ PStratDataPrep <- function(ThreatList,Levels){
   return(SimulationDF)
 }
 
+PStratAnalysis <- function(SimDF){
+  SimDF$Threat_Level <- as.factor(SimDF$Threat_Level)
+  SimDF$Wid <- c(1:nrow(SimDF))
+  ezANOVAFunction <- function(DF){
+    ANOVA <- ezANOVA(DF,dv=Proportion,wid=Wid,between=Threat_Level,return_aov=TRUE)
+    return(ANOVA)
+  }
+  ANOVAList <- dlply(SimDF,.(Punishment_Strategy),ezANOVAFunction)
+  AddMSE <- function(ANOVA){
+    ANOVA$ANOVA$MSE <- ANOVA$`Levene's Test for Homogeneity of Variance`$SSd / ANOVA$ANOVA$DFd
+    return(ANOVA)
+  }
+  ANOVAList <- lapply(ANOVAList,AddMSE)
+  ANOVATable <- rbind(ANOVAList$Responsibly$ANOVA,ANOVAList$Anti_Socially$ANOVA,ANOVAList$Spitefully$ANOVA,ANOVAList$Never$ANOVA)
+  ANOVATable$Contribution_Strategy <- c("Responsibly","Anti_Socially","Spitefully","Never")
+  TukeyFunction <- function(ANOVA){
+    Tukey <- TukeyHSD(ANOVA$aov)
+    return(Tukey)
+  }
+  TukeyList <- lapply(ANOVAList,TukeyFunction)
+  ResultsList <- list(ANOVATable,TukeyList)
+  return(ResultsList)
+}
+
 PStratPlot <- function(SimulationDF){
   SummaryTable <- ddply(SimulationDF,.(Punishment_Strategy,Threat_Level),SummaryFunction) # Use the summary function to find the mean proportion and SD for each punishment strategy and threat level.
   PStratPlot <- ggplot(data = SummaryTable, aes(x=Threat_Level, y=Proportion, group=Punishment_Strategy, colour=Punishment_Strategy)) + geom_line() + geom_point() + scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector), 22)) + geom_errorbar(aes(ymin=Proportion-(sd/2), ymax=Proportion+(sd/2)), width=1,position=position_dodge(0.05))
@@ -122,5 +168,7 @@ PStratPlot <- function(SimulationDF){
 
 CStratData <- CStratDataPrep(ListOfThreats,ThreatLevelIndex)
 PStratData <- PStratDataPrep(ListOfThreats,ThreatLevelIndex)
+CStratAnalysis(CStratData)
+PStratAnalysis(PStratData)
 CStratPlot(CStratData)
 PStratPlot(PStratData)

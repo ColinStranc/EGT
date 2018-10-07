@@ -29,6 +29,6 @@ read.egt <- function(egt.dir)
   
   a <- list(results, threat_level)
   names(a) <- c("results", "threat.level")
-  
+
   return(a)
 }
