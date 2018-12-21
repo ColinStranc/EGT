@@ -1,3 +1,10 @@
+# Load packages used for analysis
+library(plyr)
+library(dplyr)
+library(data.table)
+library(ggplot2)
+library(ez)
+
 # Read data
 source(file.path("./read_egt.R"),chdir=F)
 FileThreat03Trial01 <- read.egt("text")
@@ -36,12 +43,6 @@ results2502 <- data.frame(gens2502, xs2502, ys2502, cstrats2502, pstrats2502,con
 names(results2502) <- c("gens","xs","ys","cstrats","pstrats","contTag")
 FileThreat25Trial02 <- list(results2502, 5, 5, 0, 0.1, 0.1)
 names(FileThreat25Trial02) <- c("results", "size", "reps", "egt.version", "mutation.rate", "death.rate")
-
-library(plyr)
-library(dplyr)
-library(data.table)
-library(ggplot2)
-library(ez)
 
 # Created lists of datasets as well as indices that will be used
 DatasetsListThreat03 <- list(FileThreat03Trial01$results,FileThreat03Trial02$results)
@@ -112,7 +113,7 @@ CStratPlot <- function(SimulationDF){
   CStratPlot <- ggplot(data = SummaryTable, aes(x=Threat_Level, y=Proportion, group=Contribution_Strategy, colour=Contribution_Strategy)) +
     geom_line() +
     geom_point(aes(shape=Contribution_Strategy),size=3) +
-    scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector), 22)) +
+    scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector),ThreatLevelVector[2]-ThreatLevelVector[1])) +
     coord_cartesian(ylim = c(0, 1)) +
     geom_errorbar(aes(ymin=Proportion-(sd/2), ymax=Proportion+(sd/2)), width=1,position=position_dodge(0.05)) +
     labs(title="Contribution Strategy",x="Threat Level",y="Long-Term Avg. Population Proportion") +
@@ -174,7 +175,7 @@ PStratPlot <- function(SimulationDF){
   PStratPlot <- ggplot(data = SummaryTable, aes(x=Threat_Level, y=Proportion, group=Punishment_Strategy, colour=Punishment_Strategy)) +
     geom_line() +
     geom_point(aes(shape=Punishment_Strategy),size=3) +
-    scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector), 22)) +
+    scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector),ThreatLevelVector[2]-ThreatLevelVector[1])) +
     coord_cartesian(ylim = c(0, 1))+
     geom_errorbar(aes(ymin=Proportion-(sd/2), ymax=Proportion+(sd/2)), width=1,position=position_dodge(0.05)) +
     labs(title="Punishment Strategy",x="Threat Level",y="Long-Term Avg. Population Proportion") +
