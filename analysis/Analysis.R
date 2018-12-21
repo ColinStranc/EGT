@@ -109,7 +109,16 @@ CStratAnalysis <- function(SimDF){
 
 CStratPlot <- function(SimulationDF){
   SummaryTable <- ddply(SimulationDF,.(Contribution_Strategy,Threat_Level),SummaryFunction) # Use the summary function to find the mean proportion and SD for each contribution strategy and threat level.
-  CStratPlot <- ggplot(data = SummaryTable, aes(x=Threat_Level, y=Proportion, group=Contribution_Strategy, colour=Contribution_Strategy)) + geom_line() + geom_point() + scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector), 22)) + geom_errorbar(aes(ymin=Proportion-(sd/2), ymax=Proportion+(sd/2)), width=1,position=position_dodge(0.05))
+  CStratPlot <- ggplot(data = SummaryTable, aes(x=Threat_Level, y=Proportion, group=Contribution_Strategy, colour=Contribution_Strategy)) +
+    geom_line() +
+    geom_point(aes(shape=Contribution_Strategy),size=3) +
+    scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector), 22)) +
+    coord_cartesian(ylim = c(0, 1)) +
+    geom_errorbar(aes(ymin=Proportion-(sd/2), ymax=Proportion+(sd/2)), width=1,position=position_dodge(0.05)) +
+    labs(title="Contribution Strategy",x="Threat Level",y="Long-Term Avg. Population Proportion") +
+    scale_colour_discrete(name = "Contribution Strategy",breaks=c("Contribute", "Dissent", "Opportunistic","Percentage_Contributing"),labels = c("Contribute", "Dissent", "Opportunistic","% Contributing")) +
+    scale_shape_manual(name = "Contribution Strategy",breaks=c("Contribute", "Dissent", "Opportunistic","Percentage_Contributing"),labels = c("Contribute", "Dissent", "Opportunistic","% Contributing"),values = c(15:18)) +
+    theme_light()
   return(CStratPlot)
 }
 
@@ -162,7 +171,16 @@ PStratAnalysis <- function(SimDF){
 
 PStratPlot <- function(SimulationDF){
   SummaryTable <- ddply(SimulationDF,.(Punishment_Strategy,Threat_Level),SummaryFunction) # Use the summary function to find the mean proportion and SD for each punishment strategy and threat level.
-  PStratPlot <- ggplot(data = SummaryTable, aes(x=Threat_Level, y=Proportion, group=Punishment_Strategy, colour=Punishment_Strategy)) + geom_line() + geom_point() + scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector), 22)) + geom_errorbar(aes(ymin=Proportion-(sd/2), ymax=Proportion+(sd/2)), width=1,position=position_dodge(0.05))
+  PStratPlot <- ggplot(data = SummaryTable, aes(x=Threat_Level, y=Proportion, group=Punishment_Strategy, colour=Punishment_Strategy)) +
+    geom_line() +
+    geom_point(aes(shape=Punishment_Strategy),size=3) +
+    scale_x_continuous(breaks=seq(min(ThreatLevelVector),max(ThreatLevelVector), 22)) +
+    coord_cartesian(ylim = c(0, 1))+
+    geom_errorbar(aes(ymin=Proportion-(sd/2), ymax=Proportion+(sd/2)), width=1,position=position_dodge(0.05)) +
+    labs(title="Punishment Strategy",x="Threat Level",y="Long-Term Avg. Population Proportion") +
+    scale_colour_discrete(name = "Punishment Strategy",breaks=c("Responsibly", "Anti_Socially", "Spitefully","Never"),labels = c("Responsibly", "Anti-Socially", "Spitefully","Never")) +
+    scale_shape_manual(name = "Punishment Strategy",breaks=c("Responsibly", "Anti_Socially", "Spitefully","Never"),labels = c("Responsibly", "Anti-Socially", "Spitefully","Never"),values = c(15:18)) +
+    theme_light()
   return(PStratPlot)
 }
 
