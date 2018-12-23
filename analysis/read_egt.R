@@ -30,5 +30,11 @@ read.egt <- function(egt.dir)
   a <- list(results, threat_level)
   names(a) <- c("results", "threat.level")
   
+  close(record)
+  
   return(a)
 }
+
+d <-read.egt("text")
+r <- d["results"]
+#d[]
