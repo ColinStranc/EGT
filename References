@@ -33,3 +33,17 @@
 	year = {in press},
 	editor = {Ryan, R.}
 }
+
+@article{higgins_making_2000,
+	title = {Making a good decision: {Value} from fit.},
+	volume = {55},
+	issn = {1935-990X(Electronic),0003-066X(Print)},
+	doi = {10.1037/0003-066X.55.11.1217},
+	abstract = {The classic answer to what makes a decision good concerns outcomes. A good decision has high outcome benefits (it is worthwhile) and low outcome costs (it is worth it). I propose that, independent of outcomes or value from worth, people experience a regulatory fit when they use goal pursuit means that fit their regulatory orientation, and this regulatory fit increases the value of what they are doing. The following postulates of this value from fit proposal are examined: (a) People will be more inclined toward goal means that have higher regulatory fit, (b) people's motivation during goal pursuit will be stronger when regulatory fit is higher, (c) people's (prospective) feelings about a choice they might make will be more positive for a desirable choice and more negative for an undesirable choice when regulatory fit is higher, (d) people's (retrospective) evaluations of past decisions or goal pursuits will be more positive when regulatory fit was higher, and (e) people will assign higher value to an object that was chosen with higher regulatory fit. Studies testing each of these postulates support the value-from fit proposal. How value from fit can enhance or diminish the value of goal pursuits and the quality of life itself is discussed. (PsycINFO Database Record (c) 2016 APA, all rights reserved)},
+	number = {11},
+	journal = {American Psychologist},
+	author = {Higgins, E. Tory},
+	year = {2000},
+	keywords = {*Motivation, Regulatory fit, *Choice Behavior, *Decision Making, Values, Seminal},
+	pages = {1217--1230}
+}
