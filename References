@@ -75,3 +75,48 @@
 	keywords = {*Motivation, *Decision Making, *Self-Regulation, *Prospect Theory, Preferences, Risk Factors},
 	pages = {183--201}
 }
+
+@incollection{shah_goal_2003,
+	address = {Mahwah,  NJ,  US},
+	series = {Ontario symposium on personality and social psychology.},
+	title = {Goal systems theory: {Integrating} the cognitive and motivational aspects of self-regulation.},
+	isbn = {0-8058-4036-2 (Hardcover)},
+	abstract = {Addresses fundamental self-regulatory issues by considering the basic ways in which goals can differ from each other not only in terms of their motivational contents but also in terms of their significant cognitive properties. To integrate these differing goal qualities under a general perspective, this chapter adopts a systematic approach in assuming that an individual's goals and means can be viewed as a network of cognitive associations endowed with specific structural properties. The authors begin by portraying the fundamental characteristics of goal systems: how goals inter-connect with other goals and with their attainment means and what significant configurations result from these associations. In doing so, they outline a number of characteristics of goal-systems such as their potential for implicit activation, their contextual dependence, and the transfer of properties that may occur between their components. This chapter then considers the consequences of goal systems for various self-regulatory phenomena including goal commitment, choice, substitution, and intrinsic motivation. (PsycINFO Database Record (c) 2016 APA, all rights reserved)},
+	booktitle = {Motivated social perception:  {The} {Ontario} symposium, {Vol}. 9.},
+	publisher = {Lawrence Erlbaum Associates Publishers},
+	author = {Shah, James Y. and Kruglanski, Arie W. and Friedman, Ron},
+	year = {2003},
+	keywords = {*Cognition, *Goals, *Motivation, *Self-Regulation, Systems Theory},
+	pages = {247--275}
+}
+
+@article{scholer_role_2016,
+	title = {The role of metamotivation in creating task-motivation fit.},
+	volume = {2},
+	issn = {2333-8121(Electronic),2333-8113(Print)},
+	doi = {10.1037/mot0000043},
+	abstract = {One of the challenges of effective goal pursuit is being able to flexibly adapt to changing situations and demands. The current studies investigate whether individuals exhibit effective metamotivation—successful management of one’s motivational states—in creating fit between an optimal motivational orientation and specific task demands (e.g., inducing a promotion focus, as opposed to prevention focus, in preparation for an eager brainstorming task). Using regulatory focus theory as a framework, 5 studies provide evidence that although North American individuals exhibit some metamotivational awareness of task-motivation fit in the realm of regulatory focus, they may also have competing beliefs that promotion motivation is generally better, regardless of task type. Given this tension, having metamotivational awareness of task-motivation fit did not always lead to successful behavioral enactment (Studies 3–5). We discuss connections to metacognition and implications for the role of flexibility in self-regulation. (PsycINFO Database Record (c) 2017 APA, all rights reserved)},
+	number = {3},
+	journal = {Motivation Science},
+	author = {Scholer, Abigail A. and Miele, David B.},
+	year = {2016},
+	keywords = {*Metacognition, *Motivation, Self-Regulation, Metamotivation, Regulatory fit, Regulatory focus, Seminal},
+	pages = {171--197}
+}
+
+@article{fitzsimons_outsourcing_2011,
+	title = {Outsourcing {Self}-{Regulation}},
+	volume = {22},
+	issn = {0956-7976},
+	url = {https://doi.org/10.1177/0956797610397955},
+	doi = {10.1177/0956797610397955},
+	abstract = {Three studies demonstrate a novel phenomenon—self-regulatory outsourcing—in which thinking about how other people can be instrumental (i.e., helpful) for a given goal undermines motivation to expend effort on that goal. In Experiment 1, participants who thought about how their partner helped them with health goals (as opposed to career goals) planned to spend less time and effort on health goals in the upcoming week. This pattern was stronger for depleted participants than for nondepleted participants. In Experiment 2, participants who thought about how their partner helped them with academic-achievement goals procrastinated more, leaving themselves less time for an academic task, than did participants in two control conditions. This pattern was stronger for participants who were told that procrastinating would drain their resources for the academic task than for participants who were told that procrastinating would not drain their resources for that task. In Experiment 3, participants who decreased their effort after thinking of an instrumental significant other reported higher relationship commitment to that individual than did participants who did not decrease their effort. The possibility for shared (or transactive) self-regulation is discussed.},
+	language = {en},
+	number = {3},
+	urldate = {2018-12-30},
+	journal = {Psychological Science},
+	author = {Fitzsimons, Gráinne M. and Finkel, Eli J.},
+	month = mar,
+	year = {2011},
+	pages = {369--375}
+}
