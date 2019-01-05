@@ -3,7 +3,7 @@ library(plyr)
 library(dplyr)
 library(data.table)
 library(ggplot2)
-library(ez)
+
 
 # Read data
 source(file.path("./read_egt.R"),chdir=F)
@@ -86,25 +86,35 @@ CStratDataPrep <- function(ThreatList,Levels){
 
 CStratAnalysis <- function(SimDF){
   SimDF$Threat_Level <- as.factor(SimDF$Threat_Level)
-  SimDF$Wid <- c(1:nrow(SimDF))
-  ezANOVAFunction <- function(DF){
-    ANOVA <- ezANOVA(DF,dv=Proportion,wid=Wid,between=Threat_Level,return_aov=TRUE)
+  ANOVAFunction <- function(DF){
+    ANOVA <- aov(Proportion~Threat_Level,data=DF)
     return(ANOVA)
   }
-  ANOVAList <- dlply(SimDF,.(Contribution_Strategy),ezANOVAFunction)
-  AddMSE <- function(ANOVA){
-    ANOVA$ANOVA$MSE <- ANOVA$`Levene's Test for Homogeneity of Variance`$SSd / ANOVA$ANOVA$DFd
-    return(ANOVA)
+  ANOVAList <- dlply(SimDF,.(Contribution_Strategy),ANOVAFunction)
+  ANOVASummaryTableFunction <- function(i){
+    Summary <- summary(ANOVAList[[i]])
+    SummaryTable <- data.frame(Contribution_Strategy=names(ANOVAList[i]),
+      DF_threat=Summary[[1]][1,1],
+      DF_error=Summary[[1]][2,1],
+      SS_threat=Summary[[1]][1,2],
+      SS_error=Summary[[1]][2,2],
+      MS_threat=Summary[[1]][1,3],
+      MS_error=Summary[[1]][2,3],
+      F=Summary[[1]][1,4],
+      p=Summary[[1]][1,5],
+      PrtlEtaSq=Summary[[1]][1,2]/(Summary[[1]][1,2]+Summary[[1]][2,2])
+    )
+    return(SummaryTable)
   }
-  ANOVAList <- lapply(ANOVAList,AddMSE)
-  ANOVATable <- rbind(ANOVAList$Contribute$ANOVA,ANOVAList$Dissent$ANOVA,ANOVAList$Opportunistic$ANOVA,ANOVAList$Percentage_Contributing$ANOVA)
-  ANOVATable$Contribution_Strategy <- c("Contribute","Dissent","Opportunistic","Percentage_Contributing")
+  ANOVASummaryTable <- ldply(c(1:length(ANOVAList)),ANOVASummaryTableFunction)
   TukeyFunction <- function(ANOVA){
-    Tukey <- TukeyHSD(ANOVA$aov)
+    Tukey <- TukeyHSD(ANOVA)
+    Tukey <- Tukey$Threat_Level
     return(Tukey)
   }
   TukeyList <- lapply(ANOVAList,TukeyFunction)
-  ResultsList <- list(ANOVATable,TukeyList)
+  names(TukeyList) <- c("Contribute","Dissent","Opportunistic","Percentage_Contributing")
+  ResultsList <- list(ANOVASummaryTable,TukeyList) 
   return(ResultsList)
 }
 
@@ -148,25 +158,35 @@ PStratDataPrep <- function(ThreatList,Levels){
 
 PStratAnalysis <- function(SimDF){
   SimDF$Threat_Level <- as.factor(SimDF$Threat_Level)
-  SimDF$Wid <- c(1:nrow(SimDF))
-  ezANOVAFunction <- function(DF){
-    ANOVA <- ezANOVA(DF,dv=Proportion,wid=Wid,between=Threat_Level,return_aov=TRUE)
+  ANOVAFunction <- function(DF){
+    ANOVA <- aov(Proportion~Threat_Level,data=DF)
     return(ANOVA)
   }
-  ANOVAList <- dlply(SimDF,.(Punishment_Strategy),ezANOVAFunction)
-  AddMSE <- function(ANOVA){
-    ANOVA$ANOVA$MSE <- ANOVA$`Levene's Test for Homogeneity of Variance`$SSd / ANOVA$ANOVA$DFd
-    return(ANOVA)
+  ANOVAList <- dlply(SimDF,.(Punishment_Strategy),ANOVAFunction)
+  ANOVASummaryTableFunction <- function(i){
+    Summary <- summary(ANOVAList[[i]])
+    SummaryTable <- data.frame(Punishment_Strategy=names(ANOVAList[i]),
+      DF_threat=Summary[[1]][1,1],
+      DF_error=Summary[[1]][2,1],
+      SS_threat=Summary[[1]][1,2],
+      SS_error=Summary[[1]][2,2],
+      MS_threat=Summary[[1]][1,3],
+      MS_error=Summary[[1]][2,3],
+      F=Summary[[1]][1,4],
+      p=Summary[[1]][1,5],
+      PrtlEtaSq=Summary[[1]][1,2]/(Summary[[1]][1,2]+Summary[[1]][2,2])
+    )
+    return(SummaryTable)
   }
-  ANOVAList <- lapply(ANOVAList,AddMSE)
-  ANOVATable <- rbind(ANOVAList$Responsibly$ANOVA,ANOVAList$Anti_Socially$ANOVA,ANOVAList$Spitefully$ANOVA,ANOVAList$Never$ANOVA)
-  ANOVATable$Contribution_Strategy <- c("Responsibly","Anti_Socially","Spitefully","Never")
+  ANOVASummaryTable <- ldply(c(1:length(ANOVAList)),ANOVASummaryTableFunction)
   TukeyFunction <- function(ANOVA){
-    Tukey <- TukeyHSD(ANOVA$aov)
+    Tukey <- TukeyHSD(ANOVA)
+    Tukey <- Tukey$Threat_Level
     return(Tukey)
   }
   TukeyList <- lapply(ANOVAList,TukeyFunction)
-  ResultsList <- list(ANOVATable,TukeyList)
+  names(TukeyList) <- c("Responsibly","Anti_Socially","Spitefully","Never")
+  ResultsList <- list(ANOVASummaryTable,TukeyList) 
   return(ResultsList)
 }
 
