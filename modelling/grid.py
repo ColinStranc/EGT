@@ -1,97 +1,112 @@
 import numpy as np
-import random
-from modelling.agent import Agent
 
-DEFAULT_GRID_SIZE = 50
+from agent import Agent
 
 
 class Grid:
+	def __init__(self, dimension):
+		self._d = dimension
 
-    def __init__(self, size=DEFAULT_GRID_SIZE):
-        if size <= 0:
-            raise Exception("Grid size must be 1 or greater")
+		self._grid = np.ndarray((self._d, self._d), Agent)
 
-        self._size = size
-        self._grid = np.zeros((size, size), int)
-        self._occupied_tile_coordinates = []
+	def get_open_coordinates(self):
+		open_coordinates = []
 
-    def has_empty_tiles(self):
-        if len(self._occupied_tile_coordinates) >= self._size * self._size:
-            return False
-        return True
+		for x in range(self._d):
+			for y in range(self._d):
+				if self._grid[x, y] is None:
+					open_coordinates.append((x, y))
 
-    def is_tile_vacant(self, coordinate):
-        if 0 <= coordinate[0] < self._size and 0 <= coordinate[1] < self._size:
-            if self._grid[coordinate[0], coordinate[1]] == 0:
-                return True
+		return open_coordinates
 
-        return False
+	def add_agent(self, agent, coordinate, replace=False):
+		if self._grid[coordinate] is not None and not replace:
+			raise Exception("Agent already exists, cannot add new agent to coordinate")
 
-    def get_random_empty_square_coordinates(self):
-        empty_square = None
-        for i in range(0, 100):
-            rand_x = random.randint(0, self._size-1)
-            rand_y = random.randint(0, self._size-1)
-            if self._grid[rand_x, rand_y] == 0:
-                return rand_x, rand_y
+		self._grid[coordinate] = agent
 
-        raise Exception('Could not find empty square, try threshold reached')
+	def remove_agent(self, agent):
+		c = self.get_coordinates_of_agent(agent)
 
-    def get_occupied_tile_coordinates(self):
-        return list(self._occupied_tile_coordinates)
+		self._grid[c] = None
 
-    def get_occupied_neighbour_tile_coordinates(self, coordinate):
-        neighbours = []
+	def get_agents(self):
+		agents = []
 
-        if self.is_tile_occupied((coordinate[0] - 1, coordinate[1])):
-            neighbours.append((coordinate[0] - 1, coordinate[1]))
-        if self.is_tile_occupied((coordinate[0] + 1, coordinate[1])):
-            neighbours.append((coordinate[0] + 1, coordinate[1]))
-        if self.is_tile_occupied((coordinate[0], coordinate[1] - 1)):
-            neighbours.append((coordinate[0], coordinate[1] - 1))
-        if self.is_tile_occupied((coordinate[0], coordinate[1] + 1)):
-            neighbours.append((coordinate[0], coordinate[1] + 1))
+		for x in range(self._d):
+			for y in range(self._d):
+				if self._grid[x, y] is not None:
+					agents.append(self.get_agent((x, y)))
 
-        return neighbours
+		return agents
 
-    def is_tile_occupied(self, coordinate):
-        if 0 <= coordinate[0] < self._size and 0 <= coordinate[1] < self._size:
-            if not self._grid[coordinate[0], coordinate[1]] == 0:
-                return True
-        return False
+	def get_agent(self, coordinate):
+		return self._grid[coordinate]
 
-    def get_shuffled_occupied_tile_coordinates(self):
-        coordinates = self.get_occupied_tile_coordinates()
-        random.shuffle(coordinates)
-        return coordinates
+	def _get_occupied_coordinates(self):
+		coordinates = []
 
-    def set_agent(self, agent, square):
-        self._grid[square[0], square[1]] = agent.to_bitmap()
-        if not self._occupied_tile_coordinates.__contains__((square[0], square[1])):
-            self._occupied_tile_coordinates.append((square[0], square[1]))
+		for x in range(self._d):
+			for y in range(self._d):
+				if self._grid[x, y] is not None:
+					coordinates.append((x, y))
 
-    def get_agent(self, coordinates):
-        agent_bits = self._grid[coordinates[0], coordinates[1]]
-        if agent_bits == 0:
-            return None
+		return coordinates
 
-        return Agent.bits_to_agent(agent_bits)
+	def _get_neighbouring_coordinates(self, coordinate):
+		x = coordinate[0]
+		y = coordinate[1]
+		x_above = (x-1) % self._d
+		x_below = (x+1) % self._d
+		y_above = (y-1) % self._d
+		y_below = (y+1) % self._d
 
-    def remove_agent(self, coordinates):
-        self._grid[coordinates[0], coordinates[1]] = 0
-        self._occupied_tile_coordinates.remove((coordinates[0], coordinates[1]))
+		return list(set([(x_above, y), (x, y_below), (x_below, y), (x, y_above)]))
 
-    def __str__(self):
-        sb = ''
-        sb += '[\n'
-        for x in range(0, self._size):
-            for y in range(0, self._size):
-                agent_bits = self._grid[x, y]
-                if agent_bits == 0:
-                    sb += ' <            EMPTY  TILE            > '
-                else:
-                    sb += ' <{0}> '.format(Agent.bits_to_agent(self._grid[x, y]))
-            sb += '\n'
-        sb += ']'
+	def _get_neighbours_of_coordinate(self, coordinate):
+		neighbour_coordinates = self._get_neighbouring_coordinates(coordinate)
 
-        return sb
+		neighbours = [ self.get_agent(nc) for nc in neighbour_coordinates if self.get_agent(nc) is not None ]
+
+		return neighbours
+
+	def get_coordinates_of_agent(self, agent):
+		target_uid = agent.uid
+
+		occupied_coordinates = self._get_occupied_coordinates()
+
+		for occupied_coordinate in occupied_coordinates:
+			a = self.get_agent(occupied_coordinate)
+
+			if a.uid == target_uid:
+				return occupied_coordinate
+
+		return None
+
+	def get_empty_neighbour_coordinates(self, coordinate):
+		neighbouring_coordinates = self._get_neighbouring_coordinates(coordinate)
+
+		cs = [ c for c in neighbouring_coordinates if self.get_agent(c) is None ]
+
+		return cs
+
+	def get_neighbours_of_agent(self, agent):
+		target_coordinates = self.get_coordinates_of_agent(agent)
+		return self._get_neighbours_of_coordinate(target_coordinates)
+
+	def __str__(self):
+		text = ""
+
+		for x in range(self._d):
+			for y in range(self._d):
+				a = self._grid[x, y]
+
+				if a is None:
+					text = text + "---------------------------  "
+				else:
+					text = text + a.__str__() + "  "
+
+			text = text[:-2] + "\n"
+		text = text[:-1]
+
+		return text
