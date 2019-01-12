@@ -116,7 +116,7 @@ CStratAnalysis <- function(SimDF){
       MS_error=Summary[[1]][2,3],
       F=Summary[[1]][1,4],
       p=Summary[[1]][1,5],
-      PrtlEtaSq=Summary[[1]][1,2]/(Summary[[1]][1,2]+Summary[[1]][2,2])
+      EtaSq=Summary[[1]][1,2]/(Summary[[1]][1,2]+Summary[[1]][2,2])
     )
     return(SummaryTable)
   }
@@ -188,7 +188,7 @@ PStratAnalysis <- function(SimDF){
       MS_error=Summary[[1]][2,3],
       F=Summary[[1]][1,4],
       p=Summary[[1]][1,5],
-      PrtlEtaSq=Summary[[1]][1,2]/(Summary[[1]][1,2]+Summary[[1]][2,2])
+      EtaSq=Summary[[1]][1,2]/(Summary[[1]][1,2]+Summary[[1]][2,2])
     )
     return(SummaryTable)
   }
