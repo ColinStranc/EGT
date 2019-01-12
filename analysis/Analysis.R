@@ -72,29 +72,29 @@ SummaryFunction <- function(DF){
   return(Summary)
 }
 
-CStratDataPrep <- function(ThreatList,Levels){
-  CStratThreatLevelAnalysis <- function(TrialList){
-    # Function to determine the long-term proportion of each contribution strategy.
-    CStratProportionFunction <- function(Trial){
+StratDataPrep <- function(ThreatList,Levels,Strategy){
+  StratThreatLevelAnalysis <- function(TrialList){
+    StratProportionFunction <- function(Trial){
       NRow <- nrow(Trial)
-      Counts <- ddply(Trial,.(cstrats),.fun=nrow)
+      Counts <- ddply(Trial,Strategy,nrow)
       Counts[2] <- Counts[2] / NRow
-      Counts[[1]] <- recode(Counts[[1]],'1'='Contribute','2'='Dissent','3'='Opportunistic')
-      names(Counts) <- c("Contribution_Strategy","Proportion")
-      levels(Counts$Contribution_Strategy) <- c(levels(Counts$Contribution_Strategy),"Percentage_Contributing")
-      Counts[4,] <- c("Percentage_Contributing",mean(Trial[[6]]))
-      Counts[[2]] <- as.numeric(Counts[[2]])
+      names(Counts) <- c("Strategy","Proportion")
+      if(Strategy=='cstrats'){
+        levels(Counts$Strategy) <- c(levels(Counts$Strategy),"Percentage_Contributing")
+        Counts[4,] <- c("Percentage_Contributing",mean(Trial[[6]]))
+        Counts[[2]] <- as.numeric(Counts[[2]])
+      }else{}  
       return(Counts)
     }
-    AllTrialsDF <- rbindlist(lapply(TrialList,CStratProportionFunction)) # Apply CStratProportionFunction to each trail at a given threat level and then row bind into a dataframe.
+    AllTrialsDF <- rbindlist(lapply(TrialList,StratProportionFunction))
     return(AllTrialsDF)
   }
-  AllTrialsDFsList <- lapply(ThreatList,CStratThreatLevelAnalysis) # Apply the CStratThreatLevelAnalysis function to each threat level.
-	AddThreatLevel <- function(i){
-		AllTrialsDF <- data.frame(AllTrialsDFsList[[i]],Threat_Level = ThreatLevelVector[i])
-		return(AllTrialsDF)
-	}
-  SimulationDF <- rbindlist(lapply(Levels,AddThreatLevel)) # Add the threat level to each dataframe and then row bind the threat levels dataframes into one dataframe.
+  AllTrialsDFsList <- lapply(ThreatList,StratThreatLevelAnalysis)
+  AddThreatLevel <- function(i){
+    AllTrialsDF <- data.frame(AllTrialsDFsList[[i]],Threat_Level = ThreatLevelVector[i])
+    return(AllTrialsDF)
+  }
+  SimulationDF <- rbindlist(lapply(Levels,AddThreatLevel))
   return(SimulationDF)
 }
 
@@ -147,28 +147,6 @@ CStratPlot <- function(SimulationDF){
   return(CStratPlot)
 }
 
-PStratDataPrep <- function(ThreatList,Levels){
-  PStratThreatLevelAnalysis <- function(TrialList){
-    # Function to determine the long-term proportion of each punishment strategy.
-    PStratProportionFunction <- function(Trial){
-      NRow <- nrow(Trial)
-      Counts <- ddply(Trial,.(pstrats),.fun=nrow)
-      Counts[2] <- Counts[2] / NRow
-      Counts[[1]] <- recode(Counts[[1]],'1'='Responsibly','2'='Anti_Socially','3'='Spitefully','4'='Never')
-      names(Counts) <- c("Punishment_Strategy","Proportion")
-      return(Counts)
-    }
-    AllTrialsDF <- rbindlist(lapply(TrialList,PStratProportionFunction)) # Apply PStratProportionFunction to each trail at a given threat level and then row bind into a dataframe.
-    return(AllTrialsDF)
-  }
-  AllTrialsDFsList <- lapply(ThreatList,PStratThreatLevelAnalysis) # Apply the PStratThreatLevelAnalysis function to each threat level.
-  AddThreatLevel <- function(i){
-		AllTrialsDF <- data.frame(AllTrialsDFsList[[i]],Threat_Level = ThreatLevelVector[i])
-		return(AllTrialsDF)
-	}
-  SimulationDF <- rbindlist(lapply(Levels,AddThreatLevel)) # Add the threat level to each dataframe and then row bind the threat levels dataframes into one dataframe.
-  return(SimulationDF)
-}
 
 PStratAnalysis <- function(SimDF){
   SimDF$Threat_Level <- as.factor(SimDF$Threat_Level)
@@ -225,3 +203,8 @@ CStratAnalysis(CStratData)
 PStratAnalysis(PStratData)
 CStratPlot(CStratData)
 PStratPlot(PStratData)
+
+
+StrategyLists <- list(c('Contribute','Dissent','Opportunistic'),c("Responsibly","Anti_Socially","Spitefully","Never"))
+
+Counts[[1]] <- recode(Counts[[1]],'1'='Contribute','2'='Dissent','3'='Opportunistic')

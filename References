@@ -346,3 +346,33 @@
 	pages = {37--40},
 	file = {Springer Full Text PDF:/Users/alexandermoore/Zotero/storage/Y3T9HE5B/Pelto - 1968 - The differences between “tight” and “loose” societ.pdf:application/pdf}
 }
+
+@article{little_free_1996,
+	title = {Free {Traits}, {Personal} {Projects} and {Idio}-{Tapes}: {Three} {Tiers} for {Personality} {Psychology}},
+	volume = {7},
+	issn = {1047-840X},
+	shorttitle = {Free {Traits}, {Personal} {Projects} and {Idio}-{Tapes}},
+	number = {4},
+	urldate = {2019-01-12},
+	journal = {Psychological Inquiry},
+	author = {Little, Brian R.},
+	year = {1996},
+	pages = {340--344}
+}
+
+@article{fulmer_feeling_2010,
+	title = {On “{Feeling} {Right}” in {Cultural} {Contexts}: {How} {Person}-{Culture} {Match} {Affects} {Self}-{Esteem} and {Subjective} {Well}-{Being}},
+	volume = {21},
+	issn = {0956-7976},
+	shorttitle = {On “{Feeling} {Right}” in {Cultural} {Contexts}},
+	doi = {10.1177/0956797610384742},
+	abstract = {Whether one is in one’s native culture or abroad, one’s personality can differ markedly from the personalities of the majority, thus failing to match the “cultural norm.” Our studies examined how the interaction of individual- and cultural-level personality affects people’s self-esteem and well-being. We propose a person-culture match hypothesis that predicts that when a person’s personality matches the prevalent personalities of other people in a culture, culture functions as an important amplifier of the positive effect of personality on self-esteem and subjective well-being at the individual level. Across two studies, using data from more than 7,000 individuals from 28 societies, multilevel random-coefficient analyses showed that when a relation between a given personality trait and well-being or self-esteem exists at the individual level, the relation is stronger in cultures characterized by high levels of that personality dimension. Results were replicated across extraversion, promotion focus, and locomotive regulatory mode. Our research has practical implications for the well-being of both cultural natives and migrants.},
+	language = {en},
+	number = {11},
+	urldate = {2019-01-12},
+	journal = {Psychological Science},
+	author = {Fulmer, C. Ashley and Gelfand, Michele J. and Kruglanski, Arie W. and Kim-Prieto, Chu and Diener, Ed and Pierro, Antonio and Higgins, E. Tory},
+	year = {2010},
+	pages = {1563--1569},
+	file = {SAGE PDF Full Text:/Users/alexandermoore/Zotero/storage/FNE7IUNS/Fulmer et al. - 2010 - On “Feeling Right” in Cultural Contexts How Perso.pdf:application/pdf}
+}
