@@ -4,31 +4,41 @@ import random
 from agent import Agent
 from game import Game
 from grid import Grid
+from marshaller import Marshaller
 from strategy.strategy_factory import StrategyFactory
 
 
 class Model:
-	def __init__(self, dimension, base_pay, contribution_cost, multiplication_factor, punishment_cost, punishment_fine, mutation_rate, death_rate):
-		self._bp = base_pay
-		self._cc = contribution_cost
-		self._mf = multiplication_factor
-		self._pc = punishment_cost
-		self._pf = punishment_fine
-		self._mr = mutation_rate
-		self._dr = death_rate
+	def __init__(self, settings):
+		self._settings = settings
+		self._bp = settings.base_pay
+		self._cc = settings.contribution_cost
+		self._mf = settings.multiplication_factor
+		self._pc = settings.punishment_cost
+		self._pf = settings.punishment_fine
+		self._mr = settings.mutation_rate
+		self._dr = settings.death_rate
+		self._rounds = settings.rounds
 
-		self._g = Grid(dimension)
+		self._g = Grid(settings.dimension)
 		self._sf = StrategyFactory(self._cc, self._pf)
+		self._marshaller = Marshaller(self._settings)
 
-	def run(self, rounds):
+	def run(self):
+		rounds = self._rounds
+
 		for i in range(rounds):
 			print("###### Round {} ######".format(i+1))
 			self._run_round()
 			self._summary()
-			print(self._g)
+
+			self._marshaller.append_grid_status(self._g, i+1)
+			# print(self._g)
 
 			for agent in self._g.get_agents():
 				agent.close_round()
+
+		return self._marshaller._full_rel_path
 
 	def _summary(self):
 		op,co,de = 0,0,0
@@ -64,7 +74,7 @@ class Model:
 	def _death(self):
 		for agent in self._g.get_agents():
 			if self._dies(agent):
-				print("Agent {} died.".format(agent.uid))
+				# print("Agent {} died.".format(agent.uid))
 				self._g.remove_agent(agent)
 
 	def _dies(self, agent):
@@ -75,7 +85,7 @@ class Model:
 			if self._mutates(agent):
 				new_cstrat = self._sf.get_random_contribution_strategy()
 				new_pstrat = self._sf.get_random_punishment_strategy()
-				print("Agent {} mutates ({}, {}) -> ({}, {})".format(agent.uid, agent._cstrat.code, agent._pstrat.code, new_cstrat.code, new_pstrat.code))
+				# print("Agent {} mutates ({}, {}) -> ({}, {})".format(agent.uid, agent._cstrat.code, agent._pstrat.code, new_cstrat.code, new_pstrat.code))
 				agent._cstrat = new_cstrat
 				agent._pstrat = new_pstrat
 
@@ -98,7 +108,7 @@ class Model:
 					new_pstrat = self._sf.get_pstrat(agent)
 					new_agent = Agent(new_cstrat, new_pstrat)
 
-					print("Agent {} (f:{}) reproduced agent {} ({})".format(agent.uid, agent.get_fitness(), new_agent.uid, c))
+					# print("Agent {} (f:{}) reproduced agent {} ({})".format(agent.uid, agent.get_fitness(), new_agent.uid, c))
 
 					self._g.add_agent(new_agent, c)
 
@@ -136,6 +146,6 @@ class Model:
 		ps = self._sf.get_random_punishment_strategy()
 		agent = Agent(cs, ps)
 
-		print("Agent {} ({}, {}) was born.".format(agent.uid, agent._cstrat.code, agent._pstrat.code))
+		# print("Agent {} ({}, {}) was born.".format(agent.uid, agent._cstrat.code, agent._pstrat.code))
 
 		self._g.add_agent(agent, birth_coordinate)

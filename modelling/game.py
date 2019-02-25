@@ -25,7 +25,7 @@ class Game:
 		payoff_pool = 0
 		for agent in self._g.get_agents():
 			if agent.contributes(self._g.get_neighbours_of_agent(agent)):
-				print("Agent {} ({}) contributed.".format(agent.uid, agent._cstrat.code))
+				# print("Agent {} ({}) contributed.".format(agent.uid, agent._cstrat.code))
 				payoff_pool += self._cc
 				agent.adjust_payoff(-self._cc)
 				agent.set_contributed(True)
@@ -42,6 +42,6 @@ class Game:
 
                         for neighbour, punishes in zip(neighbours, punishments):
                                 if punishes:
-                                        print("Agent {} ({}) punished agent {} ({}).".format(agent.uid, agent._pstrat.code, neighbour.uid, neighbour._cstrat.code))
+                                        # print("Agent {} ({}) punished agent {} ({}).".format(agent.uid, agent._pstrat.code, neighbour.uid, neighbour._cstrat.code))
                                         neighbour.adjust_payoff(-self._pf)
                                         agent.adjust_payoff(-self._pc)
